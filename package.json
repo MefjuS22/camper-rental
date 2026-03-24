@@ -8,7 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev --filter=!@camper-rent/backend",
+    "dev:backend": "pnpm --filter @camper-rent/backend dev",
+    "dev:backend:logs": "pnpm --filter @camper-rent/backend dev:logs",
+    "dev:local": "turbo run dev --parallel",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "turbo run format"
