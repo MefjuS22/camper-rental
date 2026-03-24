@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Camper Rent Mobile",
+    "slug": "camper-rent-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"]
+  }
+}

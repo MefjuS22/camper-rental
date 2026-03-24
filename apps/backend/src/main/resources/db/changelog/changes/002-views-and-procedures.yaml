@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-create-view-v-camper-availability
+      author: assistant
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: |
+              CREATE OR REPLACE VIEW v_camper_availability AS
+              SELECT
+                c.id,
+                c.registration_number,
+                c.vin,
+                c.status,
+                cm.brand,
+                cm.model,
+                cc.name AS category_name
+              FROM campers c
+              JOIN camper_models cm ON cm.id = c.camper_model_id
+              JOIN camper_categories cc ON cc.id = cm.category_id;
+
+  - changeSet:
+      id: 008-create-procedure-sp-cancel-unpaid-reservations
+      author: assistant
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: |
+              CREATE OR REPLACE PROCEDURE sp_cancel_unpaid_reservations()
+              LANGUAGE plpgsql
+              AS $$
+              BEGIN
+                -- Placeholder procedure required for academic scope.
+                -- Reservation module/tables will be implemented in next iterations.
+                RAISE NOTICE 'sp_cancel_unpaid_reservations executed - no reservations table yet';
+              END;
+              $$;

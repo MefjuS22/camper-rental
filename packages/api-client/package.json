@@ -1,0 +1,26 @@
+{
+  "name": "@camper-rent/api-client",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "pnpm run generate --watch",
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "generate": "kubb generate"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.56.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@kubb/cli": "^3.0.0",
+    "@kubb/core": "^3.0.0",
+    "@kubb/plugin-oas": "^3.0.0",
+    "@kubb/plugin-react-query": "^3.0.0",
+    "@kubb/plugin-ts": "^3.0.0",
+    "@kubb/plugin-zod": "^3.0.0",
+    "typescript": "^5.6.2"
+  }
+}

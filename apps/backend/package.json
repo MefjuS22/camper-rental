@@ -1,0 +1,12 @@
+{
+  "name": "@camper-rent/backend",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "db:up": "docker compose -f ../../docker/docker-compose.yml up -d postgres",
+    "db:down": "docker compose -f ../../docker/docker-compose.yml down",
+    "dev": "pnpm run db:up && mvn spring-boot:run",
+    "build": "mvn -DskipTests package",
+    "lint": "mvn -q validate"
+  }
+}
