@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 017-create-view-v_camper_availability_calendar
+      author: assistant
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: |
+              CREATE OR REPLACE VIEW v_camper_availability_calendar AS
+              SELECT
+                c.id AS camper_id,
+                c.registration_number,
+                CASE
+                  WHEN EXISTS (
+                    SELECT 1
+                    FROM reservation_items ri
+                    JOIN reservations r ON r.id = ri.reservation_id
+                    WHERE ri.camper_id = c.id
+                      AND r.status IN ('PENDING_PAYMENT', 'CONFIRMED')
+                      AND CURRENT_DATE BETWEEN r.start_date AND r.end_date
+                  ) THEN false
+                  ELSE true
+                END AS is_available_now
+              FROM campers c;
+
+  - changeSet:
+      id: 018-create-procedure-sp_cancel_unpaid_reservations
+      author: assistant
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: |
+              CREATE OR REPLACE PROCEDURE sp_cancel_unpaid_reservations()
+              LANGUAGE plpgsql
+              AS $$
+              BEGIN
+                UPDATE reservations
+                SET status = 'CANCELLED',
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE status = 'PENDING_PAYMENT'
+                  AND created_at < (CURRENT_TIMESTAMP - INTERVAL '24 hours');
+              END;
+              $$;

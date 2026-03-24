@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CamperService {
 
     private final CamperRepository camperRepository;
@@ -39,6 +38,7 @@ public class CamperService {
         return camperMapper.toDto(camper);
     }
 
+    @Transactional
     public CamperResponseDto createCamper(CamperRequestDto dto) {
         CamperModel model = findModelById(dto.getModelId());
         Camper camper = camperMapper.toEntity(dto);
@@ -47,6 +47,7 @@ public class CamperService {
         return camperMapper.toDto(saved);
     }
 
+    @Transactional
     public CamperResponseDto updateCamper(Long id, CamperRequestDto dto) {
         Camper camper = camperRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Camper resource was not found for id: " + id));
@@ -59,6 +60,7 @@ public class CamperService {
         return camperMapper.toDto(updated);
     }
 
+    @Transactional
     public void deleteCamper(Long id) {
         Camper camper = camperRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Camper resource was not found for id: " + id));

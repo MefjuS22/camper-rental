@@ -7,3 +7,7 @@ databaseChangeLog:
       file: db/changelog/changes/003-seed-default-roles.yaml
   - include:
       file: db/changelog/changes/004-users-public-id.yaml
+  - include:
+      file: db/changelog/changes/005-reservations-and-cms.yaml
+  - include:
+      file: db/changelog/changes/006-reservation-views-procedures.yaml
