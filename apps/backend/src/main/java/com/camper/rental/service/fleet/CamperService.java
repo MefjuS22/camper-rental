@@ -35,7 +35,7 @@ public class CamperService {
     @Transactional(readOnly = true)
     public CamperResponseDto getCamperById(Long id) {
         Camper camper = camperRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Camper not found for id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Camper resource was not found for id: " + id));
         return camperMapper.toDto(camper);
     }
 
@@ -49,7 +49,7 @@ public class CamperService {
 
     public CamperResponseDto updateCamper(Long id, CamperRequestDto dto) {
         Camper camper = camperRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Camper not found for id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Camper resource was not found for id: " + id));
 
         CamperModel model = findModelById(dto.getModelId());
         camperMapper.updateEntity(dto, camper);
@@ -61,12 +61,12 @@ public class CamperService {
 
     public void deleteCamper(Long id) {
         Camper camper = camperRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Camper not found for id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Camper resource was not found for id: " + id));
         camperRepository.delete(camper);
     }
 
     private CamperModel findModelById(Long modelId) {
         return camperModelRepository.findById(modelId)
-            .orElseThrow(() -> new ResourceNotFoundException("Camper model not found for id: " + modelId));
+            .orElseThrow(() -> new ResourceNotFoundException("Camper model resource was not found for id: " + modelId));
     }
 }

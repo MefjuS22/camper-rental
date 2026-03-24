@@ -17,24 +17,27 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleResourceNotFound(ResourceNotFoundException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setTitle("Resource not found");
-        problemDetail.setType(URI.create("https://camper-rent.dev/problems/resource-not-found"));
+        problemDetail.setTitle("Resource Not Found");
+        problemDetail.setType(URI.create("urn:camper-rent:error:resource-not-found"));
+        problemDetail.setProperty("errorCode", "RESOURCE_NOT_FOUND");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
     }
 
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<ProblemDetail> handleBusinessLogic(BusinessLogicException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problemDetail.setTitle("Business rule violation");
-        problemDetail.setType(URI.create("https://camper-rent.dev/problems/business-logic"));
+        problemDetail.setTitle("Business Rule Violation");
+        problemDetail.setType(URI.create("urn:camper-rent:error:business-logic"));
+        problemDetail.setProperty("errorCode", "BUSINESS_RULE_VIOLATION");
         return ResponseEntity.badRequest().body(problemDetail);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleValidation(MethodArgumentNotValidException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
-        problemDetail.setTitle("Validation error");
-        problemDetail.setType(URI.create("https://camper-rent.dev/problems/validation"));
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request validation failed.");
+        problemDetail.setTitle("Validation Error");
+        problemDetail.setType(URI.create("urn:camper-rent:error:validation"));
+        problemDetail.setProperty("errorCode", "VALIDATION_ERROR");
 
         Map<String, String> fieldErrors = new LinkedHashMap<>();
         ex.getBindingResult().getFieldErrors()
@@ -48,10 +51,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleGeneric(Exception ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
             HttpStatus.INTERNAL_SERVER_ERROR,
-            "Unexpected internal server error"
+            "An unexpected error occurred. Please contact support if the issue persists."
         );
-        problemDetail.setTitle("Internal server error");
-        problemDetail.setType(URI.create("https://camper-rent.dev/problems/internal-error"));
+        problemDetail.setTitle("Internal Server Error");
+        problemDetail.setType(URI.create("urn:camper-rent:error:internal-server-error"));
+        problemDetail.setProperty("errorCode", "INTERNAL_SERVER_ERROR");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail);
     }
 }
