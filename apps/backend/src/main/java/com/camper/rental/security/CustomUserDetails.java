@@ -3,6 +3,7 @@ package com.camper.rental.security;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +18,10 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails(User user) {
         this.user = user;
+    }
+
+    public UUID getPublicId() {
+        return user.getPublicId();
     }
 
     @Override

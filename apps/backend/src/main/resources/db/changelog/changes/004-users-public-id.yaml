@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-enable-pgcrypto-extension
+      author: assistant
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+  - changeSet:
+      id: 012-add-users-public-id
+      author: assistant
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: public_id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - createIndex:
+            tableName: users
+            indexName: idx_users_public_id
+            unique: true
+            columns:
+              - column:
+                  name: public_id
