@@ -1,6 +1,8 @@
 package com.camper.rental.controller.auth;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.camper.rental.dto.auth.JwtResponseDto;
 import com.camper.rental.dto.auth.LoginRequestDto;
+import com.camper.rental.dto.auth.CurrentUserDto;
 import com.camper.rental.dto.auth.RegisterRequestDto;
 import com.camper.rental.service.auth.AuthService;
 
@@ -34,5 +37,11 @@ public class AuthController {
     @Operation(summary = "User registration", description = "Creates a new account and returns a JWT token.")
     public ResponseEntity<JwtResponseDto> register(@Valid @RequestBody RegisterRequestDto requestDto) {
         return ResponseEntity.ok(authService.register(requestDto));
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Current user profile", description = "Returns current authenticated user profile and roles.")
+    public ResponseEntity<CurrentUserDto> me(Authentication authentication) {
+        return ResponseEntity.ok(authService.currentUser(authentication.getName()));
     }
 }

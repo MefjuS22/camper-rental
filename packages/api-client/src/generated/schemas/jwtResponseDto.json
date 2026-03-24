@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "token": { "type": "string" },
+    "publicId": { "type": "string", "format": "uuid" },
+    "email": { "type": "string" },
+    "roles": { "type": "array", "items": { "type": "string" } }
+  },
+  "x-readme-ref-name": "JwtResponseDto"
+}

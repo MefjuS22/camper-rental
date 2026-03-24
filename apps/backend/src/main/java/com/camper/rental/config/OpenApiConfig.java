@@ -11,10 +11,10 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 @Configuration
 @OpenAPIDefinition(
     info = @Info(title = "Camper Rent API", version = "v1"),
-    security = @SecurityRequirement(name = "Bearer Authentication")
+    security = @SecurityRequirement(name = "BearerAuth")
 )
 @SecurityScheme(
-    name = "Bearer Authentication",
+    name = "BearerAuth",
     type = SecuritySchemeType.HTTP,
     bearerFormat = "JWT",
     scheme = "bearer"

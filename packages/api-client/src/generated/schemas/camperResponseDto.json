@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer", "format": "int64" },
+    "registrationNumber": { "type": "string" },
+    "vin": { "type": "string" },
+    "mileage": { "type": "integer", "format": "int32" },
+    "status": { "type": "string" },
+    "model": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "format": "int64" },
+        "brand": { "type": "string" },
+        "model": { "type": "string" },
+        "productionYear": { "type": "integer", "format": "int32" },
+        "categoryId": { "type": "integer", "format": "int64" }
+      },
+      "x-readme-ref-name": "CamperModelDto"
+    }
+  },
+  "x-readme-ref-name": "CamperResponseDto"
+}

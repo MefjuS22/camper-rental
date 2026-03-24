@@ -8,5 +8,5 @@
     "outDir": "dist",
     "skipLibCheck": true
   },
-  "include": ["src", "kubb.config.ts"]
+  "include": ["src"]
 }

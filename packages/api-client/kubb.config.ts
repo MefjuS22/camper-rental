@@ -1,12 +1,18 @@
+// @ts-nocheck
 import { defineConfig } from "@kubb/core";
 import { pluginOas } from "@kubb/plugin-oas";
 import { pluginTs } from "@kubb/plugin-ts";
 import { pluginZod } from "@kubb/plugin-zod";
 import { pluginReactQuery } from "@kubb/plugin-react-query";
 
-export default defineConfig({
+const openApiInput =
+  process.env.KUBB_OPENAPI_URL ??
+  process.env.KUBB_OPENAPI_PATH ??
+  "../../apps/backend/src/main/resources/openapi/openapi.yaml";
+console.log(openApiInput);
+const config = defineConfig({
   input: {
-    path: "../../apps/backend/src/main/resources/openapi/openapi.yaml"
+    path: openApiInput
   },
   output: {
     path: "./src/generated",
@@ -31,3 +37,5 @@ export default defineConfig({
     })
   ]
 });
+
+export default config;

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.camper.rental.dto.auth.JwtResponseDto;
 import com.camper.rental.dto.auth.LoginRequestDto;
 import com.camper.rental.dto.auth.RegisterRequestDto;
+import com.camper.rental.dto.auth.CurrentUserDto;
 import com.camper.rental.entity.auth.Role;
 import com.camper.rental.entity.auth.User;
 import com.camper.rental.exception.BusinessLogicException;
@@ -93,6 +94,24 @@ public class AuthService {
             .publicId(savedUser.getPublicId())
             .email(savedUser.getEmail())
             .roles(extractRoles(userDetails.getAuthorities()))
+            .build();
+    }
+
+    @Transactional(readOnly = true)
+    public CurrentUserDto currentUser(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new BusinessLogicException("Authenticated user was not found."));
+
+        return CurrentUserDto.builder()
+            .publicId(user.getPublicId())
+            .email(user.getEmail())
+            .roles(
+                user.getRoles().stream()
+                    .map(Role::getName)
+                    .map(role -> role.startsWith("ROLE_") ? role.substring(5) : role)
+                    .map(role -> role.toUpperCase(Locale.ROOT))
+                    .toList()
+            )
             .build();
     }
 
