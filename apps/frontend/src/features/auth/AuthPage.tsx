@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { login, me, register } from "@camper-rent/api-client";
+import { useMutation } from "@tanstack/react-query";
+import { login, register } from "@camper-rent/api-client";
 import {
   Alert,
   Box,
@@ -24,7 +24,7 @@ import { env } from "../../utils/env";
 import { useAuthStore } from "../../store/auth-store";
 
 const formSchema = z.object({
-  email: z.string().email("Invalid email format"),
+  email: z.email("Invalid email format"),
   password: z.string().min(8, "Password must contain at least 8 characters")
 });
 
@@ -34,7 +34,6 @@ export function AuthPage() {
   const [tab, setTab] = useState<"login" | "register">("login");
   const auth = useAuthStore((state) => state.auth);
   const setAuth = useAuthStore((state) => state.setAuth);
-  const syncCurrentUser = useAuthStore((state) => state.syncCurrentUser);
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
   const form = useForm<FormValues>({
@@ -54,27 +53,6 @@ export function AuthPage() {
     mutationFn: (values: FormValues) => register(env.apiBaseUrl, values),
     onSuccess: (response) => setAuth(response)
   });
-
-  const currentUserQuery = useQuery({
-    queryKey: ["auth", "me", auth?.token],
-    queryFn: () => me(env.apiBaseUrl, auth!.token),
-    enabled: Boolean(auth?.token),
-    refetchInterval: 30_000,
-    refetchIntervalInBackground: true,
-    retry: false
-  });
-
-  useEffect(() => {
-    if (currentUserQuery.data) {
-      syncCurrentUser(currentUserQuery.data);
-    }
-  }, [currentUserQuery.data, syncCurrentUser]);
-
-  useEffect(() => {
-    if (currentUserQuery.isError) {
-      clearAuth();
-    }
-  }, [currentUserQuery.isError, clearAuth]);
 
   const isLoading = loginMutation.isPending || registerMutation.isPending;
   const errorMessage = loginMutation.error?.message ?? registerMutation.error?.message ?? null;
