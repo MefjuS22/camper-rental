@@ -15,9 +15,17 @@ import com.camper.rental.entity.auth.User;
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
         this.user = user;
+        Set<String> authorityNames = user.getRoles().stream()
+            .map(role -> role.getName().trim().toUpperCase(Locale.ROOT))
+            .map(roleName -> roleName.startsWith("ROLE_") ? roleName : "ROLE_" + roleName)
+            .collect(Collectors.toSet());
+        this.authorities = authorityNames.stream()
+            .map(SimpleGrantedAuthority::new)
+            .toList();
     }
 
     public UUID getPublicId() {
@@ -26,14 +34,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<String> authorities = user.getRoles().stream()
-            .map(role -> role.getName().trim().toUpperCase(Locale.ROOT))
-            .map(roleName -> roleName.startsWith("ROLE_") ? roleName : "ROLE_" + roleName)
-            .collect(Collectors.toSet());
-
-        return authorities.stream()
-            .map(SimpleGrantedAuthority::new)
-            .toList();
+        return authorities;
     }
 
     @Override
