@@ -9,11 +9,11 @@ import com.camper.rental.dto.fleet.CamperRequestDto;
 import com.camper.rental.dto.fleet.CamperResponseDto;
 import com.camper.rental.entity.fleet.Camper;
 import com.camper.rental.entity.fleet.CamperModel;
+import com.camper.rental.exception.ResourceNotFoundException;
 import com.camper.rental.mapper.fleet.CamperMapper;
 import com.camper.rental.repository.fleet.CamperModelRepository;
 import com.camper.rental.repository.fleet.CamperRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,7 +35,7 @@ public class CamperService {
     @Transactional(readOnly = true)
     public CamperResponseDto getCamperById(Long id) {
         Camper camper = camperRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Camper not found for id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Camper not found for id: " + id));
         return camperMapper.toDto(camper);
     }
 
@@ -49,7 +49,7 @@ public class CamperService {
 
     public CamperResponseDto updateCamper(Long id, CamperRequestDto dto) {
         Camper camper = camperRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Camper not found for id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Camper not found for id: " + id));
 
         CamperModel model = findModelById(dto.getModelId());
         camperMapper.updateEntity(dto, camper);
@@ -61,12 +61,12 @@ public class CamperService {
 
     public void deleteCamper(Long id) {
         Camper camper = camperRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Camper not found for id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Camper not found for id: " + id));
         camperRepository.delete(camper);
     }
 
     private CamperModel findModelById(Long modelId) {
         return camperModelRepository.findById(modelId)
-            .orElseThrow(() -> new EntityNotFoundException("Camper model not found for id: " + modelId));
+            .orElseThrow(() -> new ResourceNotFoundException("Camper model not found for id: " + modelId));
     }
 }

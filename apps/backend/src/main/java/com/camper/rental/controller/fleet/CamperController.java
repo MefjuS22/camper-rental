@@ -2,6 +2,7 @@ package com.camper.rental.controller.fleet;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,13 +44,13 @@ public class CamperController {
 
     @PostMapping
     @Operation(summary = "Create camper", description = "Creates a new camper entity in fleet.")
-    public ResponseEntity<CamperResponseDto> createCamper(@RequestBody CamperRequestDto requestDto) {
+    public ResponseEntity<CamperResponseDto> createCamper(@Valid @RequestBody CamperRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(camperService.createCamper(requestDto));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update camper", description = "Updates an existing camper identified by id.")
-    public ResponseEntity<CamperResponseDto> updateCamper(@PathVariable Long id, @RequestBody CamperRequestDto requestDto) {
+    public ResponseEntity<CamperResponseDto> updateCamper(@PathVariable Long id, @Valid @RequestBody CamperRequestDto requestDto) {
         return ResponseEntity.ok(camperService.updateCamper(id, requestDto));
     }
 
