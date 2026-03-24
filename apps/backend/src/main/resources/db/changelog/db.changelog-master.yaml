@@ -3,3 +3,7 @@ databaseChangeLog:
       file: db/changelog/changes/001-init-schema.yaml
   - include:
       file: db/changelog/changes/002-views-and-procedures.yaml
+  - include:
+      file: db/changelog/changes/003-seed-default-roles.yaml
+  - include:
+      file: db/changelog/changes/004-users-public-id.yaml

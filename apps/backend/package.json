@@ -4,9 +4,14 @@
   "version": "0.1.0",
   "scripts": {
     "db:up": "docker compose -f ../../docker/docker-compose.yml up -d postgres",
-    "db:down": "docker compose -f ../../docker/docker-compose.yml down",
-    "dev": "pnpm run db:up && mvn spring-boot:run",
-    "build": "mvn -DskipTests package",
-    "lint": "mvn -q validate"
+    "db:down": "docker compose -f ../../docker/docker-compose.yml stop postgres",
+    "docker:up": "docker compose -f ../../docker/docker-compose.yml up -d --build backend",
+    "docker:down": "docker compose -f ../../docker/docker-compose.yml down",
+    "docker:logs": "docker compose -f ../../docker/docker-compose.yml logs -f backend",
+    "dev": "pnpm run docker:up",
+    "dev:logs": "pnpm run docker:logs",
+    "dev:local": "pnpm run db:up && mvnw.cmd spring-boot:run",
+    "build": "mvnw.cmd -DskipTests package",
+    "lint": "mvnw.cmd -q validate"
   }
 }

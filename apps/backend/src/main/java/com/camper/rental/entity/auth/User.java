@@ -2,6 +2,7 @@ package com.camper.rental.entity.auth;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import com.camper.rental.entity.BaseEntity;
 
@@ -10,11 +11,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity {
+
+    @Column(nullable = false, unique = true, updatable = false)
+    private UUID publicId;
 
     @Column(nullable = false, unique = true, length = 255)
     private String email;
@@ -32,6 +37,21 @@ public class User extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @PrePersist
+    void ensurePublicId() {
+        if (publicId == null) {
+            publicId = UUID.randomUUID();
+        }
+    }
+
+    public UUID getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(UUID publicId) {
+        this.publicId = publicId;
+    }
 
     public String getEmail() {
         return email;
