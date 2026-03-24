@@ -1,0 +1,12 @@
+{
+  "required": ["mileage", "modelId", "registrationNumber", "status", "vin"],
+  "type": "object",
+  "properties": {
+    "registrationNumber": { "type": "string" },
+    "vin": { "type": "string" },
+    "mileage": { "minimum": 0, "type": "integer", "format": "int32" },
+    "status": { "type": "string" },
+    "modelId": { "type": "integer", "format": "int64" }
+  },
+  "x-readme-ref-name": "CamperRequestDto"
+}

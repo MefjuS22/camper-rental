@@ -1,0 +1,9 @@
+{
+  "required": ["email", "password"],
+  "type": "object",
+  "properties": {
+    "email": { "type": "string" },
+    "password": { "maxLength": 2147483647, "minLength": 8, "type": "string" }
+  },
+  "x-readme-ref-name": "RegisterRequestDto"
+}
