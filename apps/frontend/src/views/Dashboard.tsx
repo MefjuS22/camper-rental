@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Button,
@@ -12,9 +13,10 @@ import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 
 export function Dashboard() {
+  const { t } = useTranslation();
+
   return (
     <Stack spacing={3}>
-      {/* Hero card with gradient headline */}
       <Card>
         <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
           <Stack spacing={2}>
@@ -30,19 +32,18 @@ export function Dashboard() {
                 backgroundClip: "text"
               }}
             >
-              Premium Dark SaaS
+              {t("dashboard.heroTitle")}
             </Typography>
             <Typography
               variant="body1"
               color="text.secondary"
               sx={{ maxWidth: (theme) => theme.breakpoints.values.md }}
             >
-              Pulpit administracyjny wypożyczalni kamperów — szybki podgląd aktywności, floty i rezerwacji w jednym
-              miejscu. Ten blok pokazuje gradientowy nagłówek na ciemnym tle kart.
+              {t("dashboard.heroDescription")}
             </Typography>
             <Box>
               <Button variant="contained" color="primary" size="large">
-                Nowa rezerwacja
+                {t("dashboard.newReservation")}
               </Button>
             </Box>
           </Stack>
@@ -56,14 +57,14 @@ export function Dashboard() {
               <Stack direction="row" alignItems="center" spacing={1} mb={1}>
                 <TrendingUpRoundedIcon color="primary" />
                 <Typography variant="subtitle2" color="text.secondary" fontWeight={600}>
-                  Przychód (miesiąc)
+                  {t("dashboard.stats.revenueTitle")}
                 </Typography>
               </Stack>
               <Typography variant="h4" fontWeight={700}>
                 128 400 zł
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                +12% vs poprzedni miesiąc
+                {t("dashboard.stats.revenueHint")}
               </Typography>
             </CardContent>
           </Card>
@@ -74,14 +75,14 @@ export function Dashboard() {
               <Stack direction="row" alignItems="center" spacing={1} mb={1}>
                 <GroupsRoundedIcon color="primary" />
                 <Typography variant="subtitle2" color="text.secondary" fontWeight={600}>
-                  Aktywni klienci
+                  {t("dashboard.stats.clientsTitle")}
                 </Typography>
               </Stack>
               <Typography variant="h4" fontWeight={700}>
                 342
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                28 nowych w tym tygodniu
+                {t("dashboard.stats.clientsHint")}
               </Typography>
             </CardContent>
           </Card>
@@ -92,14 +93,14 @@ export function Dashboard() {
               <Stack direction="row" alignItems="center" spacing={1} mb={1}>
                 <CalendarMonthRoundedIcon color="primary" />
                 <Typography variant="subtitle2" color="text.secondary" fontWeight={600}>
-                  Rezerwacje (dziś)
+                  {t("dashboard.stats.reservationsTodayTitle")}
                 </Typography>
               </Stack>
               <Typography variant="h4" fontWeight={700}>
                 14
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                6 oczekuje na potwierdzenie
+                {t("dashboard.stats.reservationsTodayHint")}
               </Typography>
             </CardContent>
           </Card>
@@ -109,10 +110,10 @@ export function Dashboard() {
           <Card>
             <CardContent>
               <Typography variant="h6" fontWeight={700} gutterBottom>
-                Flota
+                {t("dashboard.fleetCardTitle")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Podgląd dostępnych pojazdów, przeglądów technicznych i statusów — moduł zostanie podłączony do API.
+                {t("dashboard.fleetCardBody")}
               </Typography>
             </CardContent>
           </Card>
@@ -121,10 +122,10 @@ export function Dashboard() {
           <Card>
             <CardContent>
               <Typography variant="h6" fontWeight={700} gutterBottom>
-                Rezerwacje
+                {t("dashboard.reservationsCardTitle")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Lista bieżących i nadchodzących wynajmów z filtrowaniem po dacie i kliencie.
+                {t("dashboard.reservationsCardBody")}
               </Typography>
             </CardContent>
           </Card>

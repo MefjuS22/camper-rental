@@ -5,6 +5,8 @@ import { RouterProvider } from "@tanstack/react-router";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 
+import "./i18n/config";
+import { I18nHtmlLang } from "./i18n/I18nHtmlLang";
 import { router } from "./router";
 import { theme } from "./theme";
 
@@ -14,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
+        <I18nHtmlLang />
         <CssBaseline />
         <RouterProvider router={router} />
       </ThemeProvider>

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Stack, Typography } from "@mui/material";
 
 export const Route = createFileRoute("/fleet")({
@@ -6,13 +7,15 @@ export const Route = createFileRoute("/fleet")({
 });
 
 function FleetPage() {
+  const { t } = useTranslation();
+
   return (
     <Stack spacing={2}>
       <Typography variant="h5" fontWeight={600}>
-        Flota
+        {t("fleet.title")}
       </Typography>
       <Typography variant="body1" color="text.secondary">
-        Moduł floty — wkrótce lista kamperów i zarządzanie pojazdami.
+        {t("fleet.placeholder")}
       </Typography>
     </Stack>
   );

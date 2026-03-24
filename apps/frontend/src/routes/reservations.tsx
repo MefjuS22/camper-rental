@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Stack, Typography } from "@mui/material";
 
 export const Route = createFileRoute("/reservations")({
@@ -6,13 +7,15 @@ export const Route = createFileRoute("/reservations")({
 });
 
 function ReservationsPage() {
+  const { t } = useTranslation();
+
   return (
     <Stack spacing={2}>
       <Typography variant="h5" fontWeight={600}>
-        Rezerwacje
+        {t("reservations.title")}
       </Typography>
       <Typography variant="body1" color="text.secondary">
-        Moduł rezerwacji — wkrótce lista i obsługa rezerwacji.
+        {t("reservations.placeholder")}
       </Typography>
     </Stack>
   );
