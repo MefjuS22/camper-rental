@@ -1,0 +1,278 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-create-reservations
+      author: assistant
+      changes:
+        - createTable:
+            tableName: reservations
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: public_id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: DECIMAL(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: VARCHAR(1000)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: reservations
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_reservations_user
+        - createIndex:
+            tableName: reservations
+            indexName: idx_reservations_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: reservations
+            indexName: idx_reservations_status
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            tableName: reservations
+            indexName: idx_reservations_dates
+            columns:
+              - column:
+                  name: start_date
+              - column:
+                  name: end_date
+
+  - changeSet:
+      id: 014-create-reservation-items
+      author: assistant
+      changes:
+        - createTable:
+            tableName: reservation_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: reservation_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: camper_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price_per_day
+                  type: DECIMAL(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: days_count
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: reservation_items
+            baseColumnNames: reservation_id
+            referencedTableName: reservations
+            referencedColumnNames: id
+            constraintName: fk_reservation_items_reservation
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: reservation_items
+            baseColumnNames: camper_id
+            referencedTableName: campers
+            referencedColumnNames: id
+            constraintName: fk_reservation_items_camper
+        - createIndex:
+            tableName: reservation_items
+            indexName: idx_reservation_items_reservation_id
+            columns:
+              - column:
+                  name: reservation_id
+        - createIndex:
+            tableName: reservation_items
+            indexName: idx_reservation_items_camper_id
+            columns:
+              - column:
+                  name: camper_id
+
+  - changeSet:
+      id: 015-create-reservation-status-history
+      author: assistant
+      changes:
+        - createTable:
+            tableName: reservation_status_history
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: reservation_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: changed_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: VARCHAR(500)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: reservation_status_history
+            baseColumnNames: reservation_id
+            referencedTableName: reservations
+            referencedColumnNames: id
+            constraintName: fk_reservation_status_history_reservation
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 016-create-cms-posts
+      author: assistant
+      changes:
+        - createTable:
+            tableName: cms_posts
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: public_id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: title
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: slug
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: excerpt
+                  type: VARCHAR(1000)
+              - column:
+                  name: content
+                  type: VARCHAR(10000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_url
+                  type: VARCHAR(1000)
+              - column:
+                  name: published
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: published_at
+                  type: TIMESTAMP
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: cms_posts
+            indexName: idx_cms_posts_slug
+            unique: true
+            columns:
+              - column:
+                  name: slug
+        - createIndex:
+            tableName: cms_posts
+            indexName: idx_cms_posts_published
+            columns:
+              - column:
+                  name: published

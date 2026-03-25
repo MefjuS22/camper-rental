@@ -1,0 +1,67 @@
+{
+  "layout": {
+    "brand": "Caravaning ZSI",
+    "panel": "Panel",
+    "notifications": "Powiadomienia",
+    "language": "Język",
+    "nav": {
+      "dashboard": "Pulpit",
+      "fleet": "Flota",
+      "reservations": "Rezerwacje"
+    },
+    "breadcrumb": {
+      "dashboard": "Pulpit",
+      "auth": "Logowanie",
+      "fleet": "Flota",
+      "reservations": "Rezerwacje",
+      "fallback": "Panel"
+    },
+    "userMenu": {
+      "openMenu": "Menu konta użytkownika",
+      "signedInAs": "Zalogowany jako"
+    }
+  },
+  "dashboard": {
+    "heroTitle": "Premium Dark SaaS",
+    "heroDescription": "Pulpit administracyjny wypożyczalni kamperów — szybki podgląd aktywności, floty i rezerwacji w jednym miejscu. Ten blok pokazuje gradientowy nagłówek na ciemnym tle kart.",
+    "newReservation": "Nowa rezerwacja",
+    "stats": {
+      "revenueTitle": "Przychód (miesiąc)",
+      "revenueHint": "+12% vs poprzedni miesiąc",
+      "clientsTitle": "Aktywni klienci",
+      "clientsHint": "28 nowych w tym tygodniu",
+      "reservationsTodayTitle": "Rezerwacje (dziś)",
+      "reservationsTodayHint": "6 oczekuje na potwierdzenie"
+    },
+    "fleetCardTitle": "Flota",
+    "fleetCardBody": "Podgląd dostępnych pojazdów, przeglądów technicznych i statusów — moduł zostanie podłączony do API.",
+    "reservationsCardTitle": "Rezerwacje",
+    "reservationsCardBody": "Lista bieżących i nadchodzących wynajmów z filtrowaniem po dacie i kliencie."
+  },
+  "auth": {
+    "title": "Camper Rent Admin",
+    "tabLogin": "Logowanie",
+    "tabRegister": "Rejestracja",
+    "email": "E-mail",
+    "password": "Hasło",
+    "submitLogin": "Zaloguj",
+    "submitRegister": "Utwórz konto",
+    "currentUser": "Zalogowany użytkownik",
+    "noSession": "Brak aktywnej sesji",
+    "publicId": "Publiczny ID",
+    "emailLabel": "E-mail",
+    "logout": "Wyloguj"
+  },
+  "fleet": {
+    "title": "Flota",
+    "placeholder": "Moduł floty — wkrótce lista kamperów i zarządzanie pojazdami."
+  },
+  "reservations": {
+    "title": "Rezerwacje",
+    "placeholder": "Moduł rezerwacji — wkrótce lista i obsługa rezerwacji."
+  },
+  "validation": {
+    "emailInvalid": "Nieprawidłowy format e-mail",
+    "passwordMin": "Hasło musi mieć co najmniej 8 znaków"
+  }
+}

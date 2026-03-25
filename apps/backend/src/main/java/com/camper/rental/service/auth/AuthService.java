@@ -30,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AuthService {
 
     private static final String DEFAULT_ROLE = "USER";
@@ -67,6 +66,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public JwtResponseDto register(RegisterRequestDto requestDto) {
         String normalizedEmail = requestDto.getEmail().trim().toLowerCase(Locale.ROOT);
         if (userRepository.findByEmail(normalizedEmail).isPresent()) {

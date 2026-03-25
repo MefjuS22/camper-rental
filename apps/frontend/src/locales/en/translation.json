@@ -1,0 +1,67 @@
+{
+  "layout": {
+    "brand": "Caravaning ZSI",
+    "panel": "Panel",
+    "notifications": "Notifications",
+    "language": "Language",
+    "nav": {
+      "dashboard": "Dashboard",
+      "fleet": "Fleet",
+      "reservations": "Reservations"
+    },
+    "breadcrumb": {
+      "dashboard": "Dashboard",
+      "auth": "Sign in",
+      "fleet": "Fleet",
+      "reservations": "Reservations",
+      "fallback": "Panel"
+    },
+    "userMenu": {
+      "openMenu": "User account menu",
+      "signedInAs": "Signed in as"
+    }
+  },
+  "dashboard": {
+    "heroTitle": "Premium Dark SaaS",
+    "heroDescription": "Administrative dashboard for the camper rental — a quick overview of activity, fleet, and reservations in one place. This block shows a gradient headline on dark card surfaces.",
+    "newReservation": "New reservation",
+    "stats": {
+      "revenueTitle": "Revenue (month)",
+      "revenueHint": "+12% vs previous month",
+      "clientsTitle": "Active clients",
+      "clientsHint": "28 new this week",
+      "reservationsTodayTitle": "Reservations (today)",
+      "reservationsTodayHint": "6 awaiting confirmation"
+    },
+    "fleetCardTitle": "Fleet",
+    "fleetCardBody": "Overview of available vehicles, inspections, and statuses — the module will be connected to the API.",
+    "reservationsCardTitle": "Reservations",
+    "reservationsCardBody": "List of current and upcoming rentals with filtering by date and customer."
+  },
+  "auth": {
+    "title": "Camper Rent Admin",
+    "tabLogin": "Login",
+    "tabRegister": "Register",
+    "email": "Email",
+    "password": "Password",
+    "submitLogin": "Login",
+    "submitRegister": "Create account",
+    "currentUser": "Current user",
+    "noSession": "No active session",
+    "publicId": "Public ID",
+    "emailLabel": "Email",
+    "logout": "Logout"
+  },
+  "fleet": {
+    "title": "Fleet",
+    "placeholder": "Fleet module — camper list and vehicle management coming soon."
+  },
+  "reservations": {
+    "title": "Reservations",
+    "placeholder": "Reservations module — list and handling coming soon."
+  },
+  "validation": {
+    "emailInvalid": "Invalid email format",
+    "passwordMin": "Password must be at least 8 characters"
+  }
+}

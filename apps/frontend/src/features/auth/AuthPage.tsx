@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { login, register } from "@camper-rent/api-client";
+import { getRouteApi } from "@tanstack/react-router";
+import { generatedApi, login, register } from "@camper-rent/api-client";
 import {
   Alert,
   Box,
@@ -23,35 +25,65 @@ import {
 import { env } from "../../utils/env";
 import { useAuthStore } from "../../store/auth-store";
 
-const formSchema = z.object({
-  email: z.email("Invalid email format"),
-  password: z.string().min(8, "Password must contain at least 8 characters")
-});
+const authRouteApi = getRouteApi("/auth");
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 export function AuthPage() {
+  const { t, i18n } = useTranslation();
+  const { redirectTo } = authRouteApi.useSearch();
+  const navigate = authRouteApi.useNavigate();
   const [tab, setTab] = useState<"login" | "register">("login");
   const auth = useAuthStore((state) => state.auth);
   const setAuth = useAuthStore((state) => state.setAuth);
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
+  function goAfterAuth() {
+    navigate({ to: redirectTo ?? "/", replace: true });
+  }
+
+  const formSchema = useMemo(() => {
+    const emailValidated = z.email({ message: t("validation.emailInvalid") });
+    const passwordValidated = z.string().min(8, { message: t("validation.passwordMin") });
+
+    if (tab === "register") {
+      return generatedApi.registerRequestDtoSchema.extend({
+        email: emailValidated,
+        password: passwordValidated.max(2147483647)
+      });
+    }
+
+    return generatedApi.loginRequestDtoSchema.extend({
+      email: emailValidated,
+      password: passwordValidated
+    });
+  }, [t, tab]);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: undefined
+      password: ""
     }
   });
 
   const loginMutation = useMutation({
     mutationFn: (values: FormValues) => login(env.apiBaseUrl, values),
-    onSuccess: (response) => setAuth(response)
+    onSuccess: (response) => {
+      setAuth(response);
+      goAfterAuth();
+    }
   });
 
   const registerMutation = useMutation({
     mutationFn: (values: FormValues) => register(env.apiBaseUrl, values),
-    onSuccess: (response) => setAuth(response)
+    onSuccess: (response) => {
+      setAuth(response);
+      goAfterAuth();
+    }
   });
 
   const isLoading = loginMutation.isPending || registerMutation.isPending;
@@ -66,23 +98,23 @@ export function AuthPage() {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ py: 6 }}>
+    <Container maxWidth="sm" sx={{ py: 6 }} key={i18n.language}>
       <Stack spacing={3}>
         <Typography variant="h4" fontWeight={700}>
-          Camper Rent Admin
+          {t("auth.title")}
         </Typography>
 
         <Card>
           <CardContent>
             <Tabs value={tab} onChange={(_, value: "login" | "register") => setTab(value)} sx={{ mb: 2 }}>
-              <Tab value="login" label="Login" />
-              <Tab value="register" label="Register" />
+              <Tab value="login" label={t("auth.tabLogin")} />
+              <Tab value="register" label={t("auth.tabRegister")} />
             </Tabs>
 
             <Box component="form" onSubmit={form.handleSubmit(onSubmit)}>
               <Stack spacing={2}>
                 <TextField
-                  label="Email"
+                  label={t("auth.email")}
                   type="email"
                   fullWidth
                   {...form.register("email")}
@@ -90,7 +122,7 @@ export function AuthPage() {
                   helperText={form.formState.errors.email?.message}
                 />
                 <TextField
-                  label="Password"
+                  label={t("auth.password")}
                   type="password"
                   fullWidth
                   {...form.register("password")}
@@ -101,7 +133,13 @@ export function AuthPage() {
                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
                 <Button type="submit" variant="contained" disabled={isLoading}>
-                  {isLoading ? <CircularProgress size={20} color="inherit" /> : tab === "login" ? "Login" : "Create account"}
+                  {isLoading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : tab === "login" ? (
+                    t("auth.submitLogin")
+                  ) : (
+                    t("auth.submitRegister")
+                  )}
                 </Button>
               </Stack>
             </Box>
@@ -111,23 +149,31 @@ export function AuthPage() {
         <Card>
           <CardContent>
             <Stack spacing={1.5}>
-              <Typography variant="h6">Current user</Typography>
-              {!auth && <Typography color="text.secondary">No active session</Typography>}
+              <Typography variant="h6">{t("auth.currentUser")}</Typography>
+              {!auth && <Typography color="text.secondary">{t("auth.noSession")}</Typography>}
               {auth && (
                 <>
                   <Typography>
-                    <strong>Public ID:</strong> {auth.publicId}
+                    <strong>{t("auth.publicId")}:</strong> {auth.publicId}
                   </Typography>
                   <Typography>
-                    <strong>Email:</strong> {auth.email}
+                    <strong>{t("auth.emailLabel")}:</strong> {auth.email}
                   </Typography>
                   <Stack direction="row" spacing={1} flexWrap="wrap">
                     {auth.roles.map((role) => (
                       <Chip key={role} label={role} size="small" color="primary" variant="outlined" />
                     ))}
                   </Stack>
-                  <Button variant="outlined" color="secondary" onClick={clearAuth} sx={{ alignSelf: "flex-start" }}>
-                    Logout
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                      clearAuth();
+                      navigate({ to: "/auth", replace: true });
+                    }}
+                    sx={{ alignSelf: "flex-start" }}
+                  >
+                    {t("auth.logout")}
                   </Button>
                 </>
               )}

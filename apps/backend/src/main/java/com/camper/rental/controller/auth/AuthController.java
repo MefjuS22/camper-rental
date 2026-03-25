@@ -2,6 +2,7 @@ package com.camper.rental.controller.auth;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,7 @@ public class AuthController {
 
     @GetMapping("/me")
     @Operation(summary = "Current user profile", description = "Returns current authenticated user profile and roles.")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<CurrentUserDto> me(Authentication authentication) {
         return ResponseEntity.ok(authService.currentUser(authentication.getName()));
     }
