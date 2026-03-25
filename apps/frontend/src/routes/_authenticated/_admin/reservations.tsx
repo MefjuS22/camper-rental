@@ -2,21 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Stack, Typography } from "@mui/material";
 
-export const Route = createFileRoute("/_authenticated/fleet")({
-  component: FleetPage
+export const Route = createFileRoute("/_authenticated/_admin/reservations")({
+  component: ReservationsPage
 });
 
-function FleetPage() {
+function ReservationsPage() {
   const { t } = useTranslation();
 
   return (
     <Stack spacing={2}>
       <Typography variant="h5" fontWeight={600}>
-        {t("fleet.title")}
+        {t("reservations.title")}
       </Typography>
       <Typography variant="body1" color="text.secondary">
-        {t("fleet.placeholder")}
+        {t("reservations.placeholder")}
       </Typography>
     </Stack>
   );
 }
+

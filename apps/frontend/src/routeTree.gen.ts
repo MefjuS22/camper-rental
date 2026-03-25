@@ -12,8 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedReservationsRouteImport } from './routes/_authenticated/reservations'
-import { Route as AuthenticatedFleetRouteImport } from './routes/_authenticated/fleet'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/_admin/route'
+import { Route as AuthenticatedAdminReservationsRouteImport } from './routes/_authenticated/_admin/reservations'
+import { Route as AuthenticatedAdminFleetRouteImport } from './routes/_authenticated/_admin/fleet'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -29,50 +30,56 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedReservationsRoute =
-  AuthenticatedReservationsRouteImport.update({
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/_admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminReservationsRoute =
+  AuthenticatedAdminReservationsRouteImport.update({
     id: '/reservations',
     path: '/reservations',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedFleetRoute = AuthenticatedFleetRouteImport.update({
+const AuthenticatedAdminFleetRoute = AuthenticatedAdminFleetRouteImport.update({
   id: '/fleet',
   path: '/fleet',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
-  '/fleet': typeof AuthenticatedFleetRoute
-  '/reservations': typeof AuthenticatedReservationsRoute
+  '/fleet': typeof AuthenticatedAdminFleetRoute
+  '/reservations': typeof AuthenticatedAdminReservationsRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
-  '/fleet': typeof AuthenticatedFleetRoute
-  '/reservations': typeof AuthenticatedReservationsRoute
   '/': typeof AuthenticatedIndexRoute
+  '/fleet': typeof AuthenticatedAdminFleetRoute
+  '/reservations': typeof AuthenticatedAdminReservationsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/_authenticated/fleet': typeof AuthenticatedFleetRoute
-  '/_authenticated/reservations': typeof AuthenticatedReservationsRoute
+  '/_authenticated/_admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/_admin/fleet': typeof AuthenticatedAdminFleetRoute
+  '/_authenticated/_admin/reservations': typeof AuthenticatedAdminReservationsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/' | '/auth' | '/fleet' | '/reservations'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/fleet' | '/reservations' | '/'
+  to: '/auth' | '/' | '/fleet' | '/reservations'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
-    | '/_authenticated/fleet'
-    | '/_authenticated/reservations'
+    | '/_authenticated/_admin'
     | '/_authenticated/'
+    | '/_authenticated/_admin/fleet'
+    | '/_authenticated/_admin/reservations'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -103,32 +110,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/reservations': {
-      id: '/_authenticated/reservations'
-      path: '/reservations'
-      fullPath: '/reservations'
-      preLoaderRoute: typeof AuthenticatedReservationsRouteImport
+    '/_authenticated/_admin': {
+      id: '/_authenticated/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fleet': {
-      id: '/_authenticated/fleet'
+    '/_authenticated/_admin/reservations': {
+      id: '/_authenticated/_admin/reservations'
+      path: '/reservations'
+      fullPath: '/reservations'
+      preLoaderRoute: typeof AuthenticatedAdminReservationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/fleet': {
+      id: '/_authenticated/_admin/fleet'
       path: '/fleet'
       fullPath: '/fleet'
-      preLoaderRoute: typeof AuthenticatedFleetRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof AuthenticatedAdminFleetRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
   }
 }
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminFleetRoute: typeof AuthenticatedAdminFleetRoute
+  AuthenticatedAdminReservationsRoute: typeof AuthenticatedAdminReservationsRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminFleetRoute: AuthenticatedAdminFleetRoute,
+    AuthenticatedAdminReservationsRoute: AuthenticatedAdminReservationsRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedFleetRoute: typeof AuthenticatedFleetRoute
-  AuthenticatedReservationsRoute: typeof AuthenticatedReservationsRoute
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedFleetRoute: AuthenticatedFleetRoute,
-  AuthenticatedReservationsRoute: AuthenticatedReservationsRoute,
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 

@@ -26,21 +26,37 @@ import DirectionsCarFilledRoundedIcon from "@mui/icons-material/DirectionsCarFil
 import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
-import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, LinkProps, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 
 import type { AppLanguage } from "../../i18n/config";
 import { SUPPORTED_LANGUAGES } from "../../i18n/config";
 import { parseAuthRedirectTo } from "../../routes/auth";
 import { useAuthStore } from "../../store/auth-store";
+import { ParseKeys } from "i18next";
 
 const DRAWER_WIDTH = 260;
 const SIDEBAR_INNER_BG = "#0D0F17";
 
 const navConfig = [
   { to: "/", key: "layout.nav.dashboard" as const, icon: <DashboardRoundedIcon /> },
-  { to: "/fleet", key: "layout.nav.fleet" as const, icon: <DirectionsCarFilledRoundedIcon /> },
-  { to: "/reservations", key: "layout.nav.reservations" as const, icon: <EventNoteRoundedIcon /> }
-];
+  {
+    to: "/fleet",
+    key: "layout.nav.fleet" as const,
+    icon: <DirectionsCarFilledRoundedIcon />,
+    requiredRoles: ["ADMIN"] as const
+  },
+  {
+    to: "/reservations",
+    key: "layout.nav.reservations" as const,
+    icon: <EventNoteRoundedIcon />,
+    requiredRoles: ["ADMIN"] as const
+  }
+] satisfies Array<{
+  to: LinkProps["to"];
+  key: ParseKeys
+  icon: ReactNode
+  requiredRoles?: readonly string[]
+}>;
 
 const breadcrumbKeyByPath: Record<string, string> = {
   "/": "layout.breadcrumb.dashboard",
@@ -65,6 +81,12 @@ export function MainLayout({ children }: MainLayoutProps) {
   const userMenuOpen = Boolean(userMenuAnchor);
 
   const avatarLetter = auth?.email?.charAt(0).toUpperCase() ?? "?";
+
+  const userRolesUpper = (auth?.roles ?? []).map((r) => r.toUpperCase());
+  const visibleNavConfig = navConfig.filter((item) => {
+    if (!("requiredRoles" in item) || !item.requiredRoles) return true;
+    return item.requiredRoles.some((role) => userRolesUpper.includes(role));
+  });
 
   const activeLang: AppLanguage = i18n.language.startsWith("pl") ? "pl" : "en";
 
@@ -122,7 +144,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         </Toolbar>
         <Divider sx={{ borderColor: "rgba(255,255,255,0.08)" }} />
         <List sx={{ px: 1, py: 2, flex: 1 }}>
-          {navConfig.map((item) => (
+          {visibleNavConfig.map((item) => (
             <ListItemButton
               key={item.to}
               component={Link}
