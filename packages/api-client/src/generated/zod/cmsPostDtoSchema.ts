@@ -6,12 +6,12 @@
 import { z } from "zod/v4";
 
 export const cmsPostDtoSchema = z.object({
-  publicId: z.optional(z.uuid()),
-  title: z.optional(z.string()),
-  slug: z.optional(z.string()),
-  excerpt: z.optional(z.string()),
-  content: z.optional(z.string()),
-  imageUrl: z.optional(z.string()),
-  published: z.optional(z.boolean()),
-  publishedAt: z.optional(z.iso.datetime()),
+  publicId: z.uuid(),
+  title: z.string(),
+  slug: z.string(),
+  excerpt: z.string(),
+  content: z.string(),
+  imageUrl: z.string(),
+  published: z.boolean(),
+  publishedAt: z.iso.datetime(),
 });

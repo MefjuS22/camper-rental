@@ -7,27 +7,27 @@ import type { CamperModelDto } from "./CamperModelDto.ts";
 
 export type CamperResponseDto = {
   /**
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  id?: number;
+  id: number;
   /**
-   * @type string | undefined
+   * @type string
    */
-  registrationNumber?: string;
+  registrationNumber: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  vin?: string;
+  vin: string;
   /**
-   * @type integer | undefined, int32
+   * @type integer, int32
    */
-  mileage?: number;
+  mileage: number;
   /**
-   * @type string | undefined
+   * @type string
    */
-  status?: string;
+  status: string;
   /**
-   * @type object | undefined
+   * @type object
    */
-  model?: CamperModelDto;
+  model: CamperModelDto;
 };

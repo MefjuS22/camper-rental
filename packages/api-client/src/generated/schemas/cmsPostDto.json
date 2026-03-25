@@ -1,4 +1,14 @@
 {
+  "required": [
+    "content",
+    "excerpt",
+    "imageUrl",
+    "publicId",
+    "published",
+    "publishedAt",
+    "slug",
+    "title"
+  ],
   "type": "object",
   "properties": {
     "publicId": { "type": "string", "format": "uuid" },

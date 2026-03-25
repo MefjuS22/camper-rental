@@ -1,4 +1,5 @@
 {
+  "required": ["email", "permissions", "publicId", "roles", "token"],
   "type": "object",
   "properties": {
     "token": { "type": "string" },

@@ -5,35 +5,35 @@
 
 export type CmsPostDto = {
   /**
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  publicId?: string;
+  publicId: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  title?: string;
+  title: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  slug?: string;
+  slug: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  excerpt?: string;
+  excerpt: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  content?: string;
+  content: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  imageUrl?: string;
+  imageUrl: string;
   /**
-   * @type boolean | undefined
+   * @type boolean
    */
-  published?: boolean;
+  published: boolean;
   /**
-   * @type string | undefined, date-time
+   * @type string, date-time
    */
-  publishedAt?: string;
+  publishedAt: string;
 };

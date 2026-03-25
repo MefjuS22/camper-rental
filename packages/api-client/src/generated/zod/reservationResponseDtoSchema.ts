@@ -6,13 +6,13 @@
 import { z } from "zod/v4";
 
 export const reservationResponseDtoSchema = z.object({
-  publicId: z.optional(z.uuid()),
-  customerEmail: z.optional(z.string()),
-  camperId: z.optional(z.int()),
-  camperRegistrationNumber: z.optional(z.string()),
-  startDate: z.optional(z.iso.date()),
-  endDate: z.optional(z.iso.date()),
-  status: z.optional(z.string()),
-  totalPrice: z.optional(z.number()),
-  notes: z.optional(z.string()),
+  publicId: z.uuid(),
+  customerEmail: z.string(),
+  camperId: z.int(),
+  camperRegistrationNumber: z.string(),
+  startDate: z.iso.date(),
+  endDate: z.iso.date(),
+  status: z.string(),
+  totalPrice: z.number(),
+  notes: z.string(),
 });

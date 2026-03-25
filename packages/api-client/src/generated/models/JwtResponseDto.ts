@@ -17,23 +17,23 @@ export type JwtResponseDtoPermissionsEnumKey =
 
 export type JwtResponseDto = {
   /**
-   * @type string | undefined
+   * @type string
    */
-  token?: string;
+  token: string;
   /**
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  publicId?: string;
+  publicId: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  email?: string;
+  email: string;
   /**
-   * @type array | undefined
+   * @type array
    */
-  roles?: string[];
+  roles: string[];
   /**
-   * @type array | undefined
+   * @type array
    */
-  permissions?: JwtResponseDtoPermissionsEnumKey[];
+  permissions: JwtResponseDtoPermissionsEnumKey[];
 };

@@ -1,4 +1,15 @@
 {
+  "required": [
+    "camperId",
+    "camperRegistrationNumber",
+    "customerEmail",
+    "endDate",
+    "notes",
+    "publicId",
+    "startDate",
+    "status",
+    "totalPrice"
+  ],
   "type": "object",
   "properties": {
     "publicId": { "type": "string", "format": "uuid" },

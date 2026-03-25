@@ -1,4 +1,5 @@
 {
+  "required": ["email", "permissions", "publicId", "roles"],
   "type": "object",
   "properties": {
     "publicId": { "type": "string", "format": "uuid" },

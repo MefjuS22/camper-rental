@@ -6,20 +6,18 @@
 import { z } from "zod/v4";
 
 export const jwtResponseDtoSchema = z.object({
-  token: z.optional(z.string()),
-  publicId: z.optional(z.uuid()),
-  email: z.optional(z.string()),
-  roles: z.optional(z.array(z.string())),
-  permissions: z.optional(
-    z.array(
-      z.enum([
-        "FLEET_READ",
-        "FLEET_WRITE",
-        "RESERVATIONS_USER",
-        "RESERVATIONS_ADMIN",
-        "CMS_ADMIN",
-        "PROFILE_READ",
-      ]),
-    ),
+  token: z.string(),
+  publicId: z.uuid(),
+  email: z.string(),
+  roles: z.array(z.string()),
+  permissions: z.array(
+    z.enum([
+      "FLEET_READ",
+      "FLEET_WRITE",
+      "RESERVATIONS_USER",
+      "RESERVATIONS_ADMIN",
+      "CMS_ADMIN",
+      "PROFILE_READ",
+    ]),
   ),
 });

@@ -7,12 +7,12 @@ import { camperModelDtoSchema } from "./camperModelDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const camperResponseDtoSchema = z.object({
-  id: z.optional(z.int()),
-  registrationNumber: z.optional(z.string()),
-  vin: z.optional(z.string()),
-  mileage: z.optional(z.int()),
-  status: z.optional(z.string()),
+  id: z.int(),
+  registrationNumber: z.string(),
+  vin: z.string(),
+  mileage: z.int(),
+  status: z.string(),
   get model() {
-    return camperModelDtoSchema.optional();
+    return camperModelDtoSchema;
   },
 });

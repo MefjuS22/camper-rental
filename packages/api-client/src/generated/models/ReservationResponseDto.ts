@@ -5,39 +5,39 @@
 
 export type ReservationResponseDto = {
   /**
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  publicId?: string;
+  publicId: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  customerEmail?: string;
+  customerEmail: string;
   /**
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  camperId?: number;
+  camperId: number;
   /**
-   * @type string | undefined
+   * @type string
    */
-  camperRegistrationNumber?: string;
+  camperRegistrationNumber: string;
   /**
-   * @type string | undefined, date
+   * @type string, date
    */
-  startDate?: string;
+  startDate: string;
   /**
-   * @type string | undefined, date
+   * @type string, date
    */
-  endDate?: string;
+  endDate: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  status?: string;
+  status: string;
   /**
-   * @type number | undefined
+   * @type number
    */
-  totalPrice?: number;
+  totalPrice: number;
   /**
-   * @type string | undefined
+   * @type string
    */
-  notes?: string;
+  notes: string;
 };

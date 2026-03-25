@@ -1,4 +1,5 @@
 {
+  "required": ["id", "mileage", "model", "registrationNumber", "status", "vin"],
   "type": "object",
   "properties": {
     "id": { "type": "integer", "format": "int64" },
