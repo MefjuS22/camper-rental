@@ -1,0 +1,18 @@
+{
+  "required": ["content", "slug", "title"],
+  "type": "object",
+  "properties": {
+    "title": { "maxLength": 200, "minLength": 0, "type": "string" },
+    "slug": {
+      "maxLength": 200,
+      "minLength": 0,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "excerpt": { "maxLength": 1000, "minLength": 0, "type": "string" },
+    "content": { "type": "string" },
+    "imageUrl": { "maxLength": 1000, "minLength": 0, "type": "string" },
+    "published": { "type": "boolean" }
+  },
+  "x-readme-ref-name": "UpsertCmsPostRequestDto"
+}

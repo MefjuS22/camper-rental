@@ -10,4 +10,16 @@ export const jwtResponseDtoSchema = z.object({
   publicId: z.optional(z.uuid()),
   email: z.optional(z.string()),
   roles: z.optional(z.array(z.string())),
+  permissions: z.optional(
+    z.array(
+      z.enum([
+        "FLEET_READ",
+        "FLEET_WRITE",
+        "RESERVATIONS_USER",
+        "RESERVATIONS_ADMIN",
+        "CMS_ADMIN",
+        "PROFILE_READ",
+      ]),
+    ),
+  ),
 });

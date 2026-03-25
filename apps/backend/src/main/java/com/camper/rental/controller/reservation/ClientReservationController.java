@@ -33,14 +33,14 @@ public class ClientReservationController {
     private final ReservationService reservationService;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('RESERVATIONS_USER')")
     @Operation(summary = "List my reservations", description = "Returns reservations for currently authenticated customer.")
     public ResponseEntity<List<ReservationResponseDto>> listMine(Authentication authentication) {
         return ResponseEntity.ok(reservationService.getCurrentUserReservations(authentication.getName()));
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('RESERVATIONS_USER')")
     @Operation(summary = "Create reservation", description = "Creates reservation for currently authenticated customer.")
     public ResponseEntity<ReservationResponseDto> create(
         Authentication authentication,
@@ -51,7 +51,7 @@ public class ClientReservationController {
     }
 
     @DeleteMapping("/{publicId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('RESERVATIONS_USER')")
     @Operation(summary = "Cancel own reservation", description = "Cancels reservation owned by current customer.")
     public ResponseEntity<Void> cancelMine(Authentication authentication, @PathVariable UUID publicId) {
         reservationService.cancelOwnReservation(authentication.getName(), publicId);

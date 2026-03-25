@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import com.camper.rental.entity.auth.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    @EntityGraph(attributePaths = {"roles"})
+    @EntityGraph(attributePaths = {"roles", "roles.permissions"})
     Optional<User> findByEmail(String email);
 
-    @EntityGraph(attributePaths = {"roles"})
+    @EntityGraph(attributePaths = {"roles", "roles.permissions"})
     Optional<User> findByPublicId(UUID publicId);
 }

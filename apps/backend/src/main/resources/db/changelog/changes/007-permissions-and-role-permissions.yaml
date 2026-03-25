@@ -1,0 +1,127 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020-create-permissions-and-role-permissions
+      author: assistant
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: |
+              SELECT CASE
+                WHEN EXISTS (
+                  SELECT 1
+                  FROM information_schema.tables
+                  WHERE table_name = 'permissions'
+                ) THEN 1
+                ELSE 0
+              END
+      changes:
+        - createTable:
+            tableName: permissions
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: role_permissions
+            columns:
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: permission_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: role_permissions
+            columnNames: role_id, permission_id
+            constraintName: pk_role_permissions
+
+        - addForeignKeyConstraint:
+            baseTableName: role_permissions
+            baseColumnNames: role_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_role_permissions_role
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: role_permissions
+            baseColumnNames: permission_id
+            referencedTableName: permissions
+            referencedColumnNames: id
+            constraintName: fk_role_permissions_permission
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 021-seed-permissions-and-role-permissions
+      author: assistant
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 1
+            sql: |
+              SELECT CASE
+                WHEN EXISTS (
+                  SELECT 1
+                  FROM information_schema.tables
+                  WHERE table_name = 'permissions'
+                ) THEN 1
+                ELSE 0
+              END
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: |
+              INSERT INTO permissions (code, created_at, updated_at)
+              VALUES
+                ('FLEET_READ', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                ('FLEET_WRITE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                ('RESERVATIONS_USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                ('RESERVATIONS_ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                ('CMS_ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                ('PROFILE_READ', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+              ON CONFLICT (code) DO NOTHING;
+
+              -- USER
+              INSERT INTO role_permissions (role_id, permission_id)
+              SELECT r.id, p.id
+              FROM roles r
+              JOIN permissions p ON true
+              WHERE r.name = 'USER'
+                AND p.code IN ('FLEET_READ','RESERVATIONS_USER','PROFILE_READ')
+              ON CONFLICT DO NOTHING;
+
+              -- ADMIN
+              INSERT INTO role_permissions (role_id, permission_id)
+              SELECT r.id, p.id
+              FROM roles r
+              JOIN permissions p ON true
+              WHERE r.name = 'ADMIN'
+                AND p.code IN ('FLEET_READ','FLEET_WRITE','RESERVATIONS_USER','RESERVATIONS_ADMIN','CMS_ADMIN','PROFILE_READ')
+              ON CONFLICT DO NOTHING;
+

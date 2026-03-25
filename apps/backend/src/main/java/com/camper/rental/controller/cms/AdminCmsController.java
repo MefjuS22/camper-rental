@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/admin/cms/posts")
 @RequiredArgsConstructor
 @Tag(name = "Admin CMS")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('CMS_ADMIN')")
 public class AdminCmsController {
 
     private final CmsPostService cmsPostService;

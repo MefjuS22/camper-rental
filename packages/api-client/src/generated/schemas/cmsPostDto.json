@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "publicId": { "type": "string", "format": "uuid" },
+    "title": { "type": "string" },
+    "slug": { "type": "string" },
+    "excerpt": { "type": "string" },
+    "content": { "type": "string" },
+    "imageUrl": { "type": "string" },
+    "published": { "type": "boolean" },
+    "publishedAt": { "type": "string", "format": "date-time" }
+  },
+  "x-readme-ref-name": "CmsPostDto"
+}

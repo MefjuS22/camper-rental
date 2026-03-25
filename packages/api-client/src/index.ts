@@ -1,2 +1,1 @@
-export * from "./auth";
-export * as generatedApi from "./generated";
+export * from "./generated";

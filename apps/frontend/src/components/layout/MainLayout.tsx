@@ -28,6 +28,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import { Link, LinkProps, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 
+import type { JwtResponseDtoPermissionsEnumKey } from "@camper-rent/api-client";
 import type { AppLanguage } from "../../i18n/config";
 import { SUPPORTED_LANGUAGES } from "../../i18n/config";
 import { parseAuthRedirectTo } from "../../routes/auth";
@@ -43,19 +44,19 @@ const navConfig = [
     to: "/fleet",
     key: "layout.nav.fleet" as const,
     icon: <DirectionsCarFilledRoundedIcon />,
-    requiredRoles: ["ADMIN"] as const
+    requiredPermissions: ["FLEET_READ"] as const
   },
   {
     to: "/reservations",
     key: "layout.nav.reservations" as const,
     icon: <EventNoteRoundedIcon />,
-    requiredRoles: ["ADMIN"] as const
+    requiredPermissions: ["RESERVATIONS_ADMIN"] as const
   }
 ] satisfies Array<{
   to: LinkProps["to"];
   key: ParseKeys
   icon: ReactNode
-  requiredRoles?: readonly string[]
+  requiredPermissions?: readonly JwtResponseDtoPermissionsEnumKey[]
 }>;
 
 const breadcrumbKeyByPath: Record<string, string> = {
@@ -82,10 +83,10 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   const avatarLetter = auth?.email?.charAt(0).toUpperCase() ?? "?";
 
-  const userRolesUpper = (auth?.roles ?? []).map((r) => r.toUpperCase());
+  const userPermissions = auth?.permissions ?? [];
   const visibleNavConfig = navConfig.filter((item) => {
-    if (!("requiredRoles" in item) || !item.requiredRoles) return true;
-    return item.requiredRoles.some((role) => userRolesUpper.includes(role));
+    if (!("requiredPermissions" in item) || !item.requiredPermissions) return true;
+    return item.requiredPermissions.some((perm) => userPermissions.includes(perm));
   });
 
   const activeLang: AppLanguage = i18n.language.startsWith("pl") ? "pl" : "en";

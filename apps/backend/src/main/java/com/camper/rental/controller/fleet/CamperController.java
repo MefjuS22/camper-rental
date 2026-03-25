@@ -33,35 +33,35 @@ public class CamperController {
 
     @GetMapping
     @Operation(summary = "Get all campers", description = "Returns the full list of campers in fleet.")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAuthority('FLEET_READ')")
     public ResponseEntity<List<CamperResponseDto>> getAllCampers() {
         return ResponseEntity.ok(camperService.getAllCampers());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get camper by id", description = "Returns a single camper by its unique identifier.")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAuthority('FLEET_READ')")
     public ResponseEntity<CamperResponseDto> getCamperById(@PathVariable Long id) {
         return ResponseEntity.ok(camperService.getCamperById(id));
     }
 
     @PostMapping
     @Operation(summary = "Create camper", description = "Creates a new camper entity in fleet.")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('FLEET_WRITE')")
     public ResponseEntity<CamperResponseDto> createCamper(@Valid @RequestBody CamperRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(camperService.createCamper(requestDto));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update camper", description = "Updates an existing camper identified by id.")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('FLEET_WRITE')")
     public ResponseEntity<CamperResponseDto> updateCamper(@PathVariable Long id, @Valid @RequestBody CamperRequestDto requestDto) {
         return ResponseEntity.ok(camperService.updateCamper(id, requestDto));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete camper", description = "Deletes a camper from fleet by id.")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('FLEET_WRITE')")
     public ResponseEntity<Void> deleteCamper(@PathVariable Long id) {
         camperService.deleteCamper(id);
         return ResponseEntity.noContent().build();

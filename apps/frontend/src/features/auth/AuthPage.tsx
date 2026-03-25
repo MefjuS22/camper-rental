@@ -3,9 +3,13 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
-import { generatedApi, login, register } from "@camper-rent/api-client";
+import {
+  useLogin,
+  useRegister,
+  loginRequestDtoSchema,
+  registerRequestDtoSchema
+} from "@camper-rent/api-client";
 import {
   Alert,
   Box,
@@ -50,13 +54,13 @@ export function AuthPage() {
     const passwordValidated = z.string().min(8, { message: t("validation.passwordMin") });
 
     if (tab === "register") {
-      return generatedApi.registerRequestDtoSchema.extend({
+      return registerRequestDtoSchema.extend({
         email: emailValidated,
         password: passwordValidated.max(2147483647)
       });
     }
 
-    return generatedApi.loginRequestDtoSchema.extend({
+    return loginRequestDtoSchema.extend({
       email: emailValidated,
       password: passwordValidated
     });
@@ -70,19 +74,27 @@ export function AuthPage() {
     }
   });
 
-  const loginMutation = useMutation({
-    mutationFn: (values: FormValues) => login(env.apiBaseUrl, values),
-    onSuccess: (response) => {
-      setAuth(response);
-      goAfterAuth();
+  const loginMutation = useLogin({
+    mutation: {
+      onSuccess: (response) => {
+        setAuth(response);
+        goAfterAuth();
+      }
+    },
+    client: {
+      baseURL: env.apiBaseUrl
     }
   });
 
-  const registerMutation = useMutation({
-    mutationFn: (values: FormValues) => register(env.apiBaseUrl, values),
-    onSuccess: (response) => {
-      setAuth(response);
-      goAfterAuth();
+  const registerMutation = useRegister({
+    mutation: {
+      onSuccess: (response) => {
+        setAuth(response);
+        goAfterAuth();
+      }
+    },
+    client: {
+      baseURL: env.apiBaseUrl
     }
   });
 
@@ -91,10 +103,10 @@ export function AuthPage() {
 
   function onSubmit(values: FormValues) {
     if (tab === "login") {
-      loginMutation.mutate(values);
+      loginMutation.mutate({ data: values });
       return;
     }
-    registerMutation.mutate(values);
+    registerMutation.mutate({ data: values });
   }
 
   return (
@@ -160,7 +172,7 @@ export function AuthPage() {
                     <strong>{t("auth.emailLabel")}:</strong> {auth.email}
                   </Typography>
                   <Stack direction="row" spacing={1} flexWrap="wrap">
-                    {auth.roles.map((role) => (
+                    {(auth.roles ?? []).map((role) => (
                       <Chip key={role} label={role} size="small" color="primary" variant="outlined" />
                     ))}
                   </Stack>

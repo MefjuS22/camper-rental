@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "publicId": { "type": "string", "format": "uuid" },
+    "email": { "type": "string" },
+    "roles": { "type": "array", "items": { "type": "string" } },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "FLEET_READ",
+          "FLEET_WRITE",
+          "RESERVATIONS_USER",
+          "RESERVATIONS_ADMIN",
+          "CMS_ADMIN",
+          "PROFILE_READ"
+        ]
+      }
+    }
+  },
+  "x-readme-ref-name": "CurrentUserDto"
+}

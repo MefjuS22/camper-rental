@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "publicId": { "type": "string", "format": "uuid" },
+    "customerEmail": { "type": "string" },
+    "camperId": { "type": "integer", "format": "int64" },
+    "camperRegistrationNumber": { "type": "string" },
+    "startDate": { "type": "string", "format": "date" },
+    "endDate": { "type": "string", "format": "date" },
+    "status": { "type": "string" },
+    "totalPrice": { "type": "number" },
+    "notes": { "type": "string" }
+  },
+  "x-readme-ref-name": "ReservationResponseDto"
+}

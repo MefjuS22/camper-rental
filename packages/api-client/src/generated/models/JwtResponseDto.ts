@@ -3,6 +3,18 @@
  * Do not edit manually.
  */
 
+export const jwtResponseDtoPermissionsEnum = {
+  FLEET_READ: "FLEET_READ",
+  FLEET_WRITE: "FLEET_WRITE",
+  RESERVATIONS_USER: "RESERVATIONS_USER",
+  RESERVATIONS_ADMIN: "RESERVATIONS_ADMIN",
+  CMS_ADMIN: "CMS_ADMIN",
+  PROFILE_READ: "PROFILE_READ",
+} as const;
+
+export type JwtResponseDtoPermissionsEnumKey =
+  (typeof jwtResponseDtoPermissionsEnum)[keyof typeof jwtResponseDtoPermissionsEnum];
+
 export type JwtResponseDto = {
   /**
    * @type string | undefined
@@ -20,4 +32,8 @@ export type JwtResponseDto = {
    * @type array | undefined
    */
   roles?: string[];
+  /**
+   * @type array | undefined
+   */
+  permissions?: JwtResponseDtoPermissionsEnumKey[];
 };

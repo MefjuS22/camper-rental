@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,12 +18,16 @@ import com.camper.rental.dto.auth.LoginRequestDto;
 import com.camper.rental.dto.auth.RegisterRequestDto;
 import com.camper.rental.dto.auth.CurrentUserDto;
 import com.camper.rental.entity.auth.Role;
+import com.camper.rental.entity.auth.PermissionEntity;
 import com.camper.rental.entity.auth.User;
 import com.camper.rental.exception.BusinessLogicException;
 import com.camper.rental.repository.auth.RoleRepository;
 import com.camper.rental.repository.auth.UserRepository;
 import com.camper.rental.security.JwtService;
 import com.camper.rental.security.CustomUserDetails;
+import com.camper.rental.security.Permission;
+
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,18 +51,50 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(normalizedEmail, requestDto.getPassword())
             );
 
-            String token = jwtService.generateToken((org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal());
-            List<String> roles = extractRoles(authentication.getAuthorities());
             var principal = authentication.getPrincipal();
+            String token = jwtService.generateToken(
+                (org.springframework.security.core.userdetails.UserDetails) principal
+            );
+
+            List<String> roles;
+            List<Permission> permissions;
             var publicId = principal instanceof CustomUserDetails customUserDetails
                 ? customUserDetails.getPublicId()
                 : userRepository.findByEmail(normalizedEmail).map(User::getPublicId).orElse(null);
+
+            if (principal instanceof CustomUserDetails customUserDetails) {
+                roles = customUserDetails.getRoleNames().stream().toList();
+                permissions = customUserDetails.getPermissions().stream().toList();
+            } else {
+                User user = userRepository.findByEmail(normalizedEmail)
+                    .orElseThrow(() -> new BusinessLogicException("Authenticated user was not found."));
+                roles = user.getRoles().stream()
+                    .map(Role::getName)
+                    .map(role -> role.startsWith("ROLE_") ? role.substring(5) : role)
+                    .map(role -> role.toUpperCase(Locale.ROOT))
+                    .toList();
+                permissions = user.getRoles().stream()
+                    .flatMap(role -> role.getPermissions().stream())
+                    .map(PermissionEntity::getCode)
+                    .filter(code -> code != null && !code.isBlank())
+                    .map(code -> code.trim().toUpperCase(Locale.ROOT))
+                    .map(code -> {
+                        try {
+                            return Permission.valueOf(code);
+                        } catch (IllegalArgumentException ex) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+            }
 
             return JwtResponseDto.builder()
                 .token(token)
                 .publicId(publicId)
                 .email(normalizedEmail)
                 .roles(roles)
+                .permissions(permissions)
                 .build();
         } catch (BadCredentialsException ex) {
             throw new BusinessLogicException("Invalid email or password.");
@@ -89,11 +124,32 @@ public class AuthService {
             defaultRoleAuthorities(savedUser.getRoles())
         );
 
+        List<String> roles = savedUser.getRoles().stream()
+            .map(Role::getName)
+            .map(role -> role.startsWith("ROLE_") ? role.substring(5) : role)
+            .map(role -> role.toUpperCase(Locale.ROOT))
+            .toList();
+        List<Permission> permissions = savedUser.getRoles().stream()
+            .flatMap(role -> role.getPermissions().stream())
+            .map(PermissionEntity::getCode)
+            .filter(code -> code != null && !code.isBlank())
+            .map(code -> code.trim().toUpperCase(Locale.ROOT))
+            .map(code -> {
+                try {
+                    return Permission.valueOf(code);
+                } catch (IllegalArgumentException ex) {
+                    return null;
+                }
+            })
+            .filter(Objects::nonNull)
+            .toList();
+
         return JwtResponseDto.builder()
             .token(jwtService.generateToken(userDetails))
             .publicId(savedUser.getPublicId())
             .email(savedUser.getEmail())
-            .roles(extractRoles(userDetails.getAuthorities()))
+            .roles(roles)
+            .permissions(permissions)
             .build();
     }
 
@@ -112,15 +168,23 @@ public class AuthService {
                     .map(role -> role.toUpperCase(Locale.ROOT))
                     .toList()
             )
+            .permissions(
+                user.getRoles().stream()
+                    .flatMap(role -> role.getPermissions().stream())
+                    .map(PermissionEntity::getCode)
+                    .filter(code -> code != null && !code.isBlank())
+                    .map(code -> code.trim().toUpperCase(Locale.ROOT))
+                    .map(code -> {
+                        try {
+                            return Permission.valueOf(code);
+                        } catch (IllegalArgumentException ex) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList()
+            )
             .build();
-    }
-
-    private List<String> extractRoles(java.util.Collection<? extends GrantedAuthority> authorities) {
-        return authorities.stream()
-            .map(GrantedAuthority::getAuthority)
-            .map(role -> role.startsWith("ROLE_") ? role.substring(5) : role)
-            .map(role -> role.toUpperCase(Locale.ROOT))
-            .toList();
     }
 
     private List<SimpleGrantedAuthority> defaultRoleAuthorities(Set<Role> roles) {

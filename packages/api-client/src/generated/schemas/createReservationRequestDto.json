@@ -1,0 +1,13 @@
+{
+  "required": ["camperId", "endDate", "pricePerDay", "startDate"],
+  "type": "object",
+  "properties": {
+    "camperId": { "type": "integer", "format": "int64" },
+    "startDate": { "type": "string", "format": "date" },
+    "endDate": { "type": "string", "format": "date" },
+    "pricePerDay": { "minimum": 0, "exclusiveMinimum": true, "type": "number" },
+    "notes": { "maxLength": 1000, "minLength": 0, "type": "string" },
+    "dateRangeValid": { "type": "boolean" }
+  },
+  "x-readme-ref-name": "CreateReservationRequestDto"
+}

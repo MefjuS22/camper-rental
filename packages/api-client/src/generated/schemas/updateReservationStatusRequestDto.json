@@ -1,0 +1,18 @@
+{
+  "required": ["status"],
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "PENDING_PAYMENT",
+        "CONFIRMED",
+        "CANCELLED",
+        "COMPLETED"
+      ]
+    },
+    "comment": { "maxLength": 500, "minLength": 0, "type": "string" }
+  },
+  "x-readme-ref-name": "UpdateReservationStatusRequestDto"
+}

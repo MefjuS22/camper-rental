@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/changes/005-reservations-and-cms.yaml
   - include:
       file: db/changelog/changes/006-reservation-views-procedures.yaml
+  - include:
+      file: db/changelog/changes/007-permissions-and-role-permissions.yaml

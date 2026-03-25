@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/admin/reservations")
 @RequiredArgsConstructor
 @Tag(name = "Admin Reservations")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('RESERVATIONS_ADMIN')")
 public class AdminReservationController {
 
     private final ReservationService reservationService;

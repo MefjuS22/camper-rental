@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { me } from "@camper-rent/api-client";
+import { useMe } from "@camper-rent/api-client";
 
 import { parseAuthRedirectTo } from "../../../routes/auth";
 import { env } from "../../../utils/env";
@@ -13,13 +12,22 @@ export function useAuthSessionSync() {
   const syncCurrentUser = useAuthStore((state) => state.syncCurrentUser);
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
-  const currentUserQuery = useQuery({
-    queryKey: ["auth", "me", auth?.token],
-    queryFn: () => me(env.apiBaseUrl, auth!.token),
-    enabled: Boolean(auth?.token),
-    refetchInterval: 30_000,
-    refetchIntervalInBackground: true,
-    retry: false
+  const currentUserQuery = useMe({
+    query: {
+      queryKey: ["auth", "me", auth?.token] as unknown as any,
+      enabled: Boolean(auth?.token),
+      refetchInterval: 30_000,
+      refetchIntervalInBackground: true,
+      retry: false
+    },
+    client: auth?.token
+      ? {
+          baseURL: env.apiBaseUrl,
+          headers: { Authorization: `Bearer ${auth.token}` }
+        }
+      : {
+          baseURL: env.apiBaseUrl
+        }
   });
 
   useEffect(() => {

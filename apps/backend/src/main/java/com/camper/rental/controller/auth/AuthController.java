@@ -42,7 +42,7 @@ public class AuthController {
 
     @GetMapping("/me")
     @Operation(summary = "Current user profile", description = "Returns current authenticated user profile and roles.")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAuthority('PROFILE_READ')")
     public ResponseEntity<CurrentUserDto> me(Authentication authentication) {
         return ResponseEntity.ok(authService.currentUser(authentication.getName()));
     }

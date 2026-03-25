@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { generatedApi } from "@camper-rent/api-client";
+import { jwtResponseDtoSchema } from "@camper-rent/api-client";
 import type { CurrentUserDto, JwtResponseDto } from "@camper-rent/api-client";
 import { z } from "zod";
 
 const STORAGE_KEY = "camper-rent-auth";
 
-const jwtResponseSchema = generatedApi.jwtResponseDtoSchema.extend({
+const jwtResponseSchema = jwtResponseDtoSchema.extend({
   token: z.string().min(1),
   publicId: z.uuid(),
   email: z.email(),
@@ -58,7 +58,8 @@ export const useAuthStore = create<AuthState>()(
             ...state.auth,
             publicId: currentUser.publicId,
             email: currentUser.email,
-            roles: currentUser.roles,
+            roles: currentUser.roles ?? state.auth.roles,
+            permissions: currentUser.permissions ?? state.auth.permissions
           };
           return { auth: nextAuth };
         });
