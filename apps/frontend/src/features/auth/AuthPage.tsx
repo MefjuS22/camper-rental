@@ -4,7 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { login, register } from "@camper-rent/api-client";
+import { getRouteApi } from "@tanstack/react-router";
+import { generatedApi, login, register } from "@camper-rent/api-client";
 import {
   Alert,
   Box,
@@ -24,6 +25,8 @@ import {
 import { env } from "../../utils/env";
 import { useAuthStore } from "../../store/auth-store";
 
+const authRouteApi = getRouteApi("/auth");
+
 type FormValues = {
   email: string;
   password: string;
@@ -31,19 +34,33 @@ type FormValues = {
 
 export function AuthPage() {
   const { t, i18n } = useTranslation();
+  const { redirectTo } = authRouteApi.useSearch();
+  const navigate = authRouteApi.useNavigate();
   const [tab, setTab] = useState<"login" | "register">("login");
   const auth = useAuthStore((state) => state.auth);
   const setAuth = useAuthStore((state) => state.setAuth);
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
-  const formSchema = useMemo(
-    () =>
-      z.object({
-        email: z.string().email({ message: t("validation.emailInvalid") }),
-        password: z.string().min(8, { message: t("validation.passwordMin") })
-      }),
-    [t]
-  );
+  function goAfterAuth() {
+    navigate({ to: redirectTo ?? "/", replace: true });
+  }
+
+  const formSchema = useMemo(() => {
+    const emailValidated = z.email({ message: t("validation.emailInvalid") });
+    const passwordValidated = z.string().min(8, { message: t("validation.passwordMin") });
+
+    if (tab === "register") {
+      return generatedApi.registerRequestDtoSchema.extend({
+        email: emailValidated,
+        password: passwordValidated.max(2147483647)
+      });
+    }
+
+    return generatedApi.loginRequestDtoSchema.extend({
+      email: emailValidated,
+      password: passwordValidated
+    });
+  }, [t, tab]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -55,12 +72,18 @@ export function AuthPage() {
 
   const loginMutation = useMutation({
     mutationFn: (values: FormValues) => login(env.apiBaseUrl, values),
-    onSuccess: (response) => setAuth(response)
+    onSuccess: (response) => {
+      setAuth(response);
+      goAfterAuth();
+    }
   });
 
   const registerMutation = useMutation({
     mutationFn: (values: FormValues) => register(env.apiBaseUrl, values),
-    onSuccess: (response) => setAuth(response)
+    onSuccess: (response) => {
+      setAuth(response);
+      goAfterAuth();
+    }
   });
 
   const isLoading = loginMutation.isPending || registerMutation.isPending;
@@ -141,7 +164,15 @@ export function AuthPage() {
                       <Chip key={role} label={role} size="small" color="primary" variant="outlined" />
                     ))}
                   </Stack>
-                  <Button variant="outlined" color="secondary" onClick={clearAuth} sx={{ alignSelf: "flex-start" }}>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                      clearAuth();
+                      navigate({ to: "/auth", replace: true });
+                    }}
+                    sx={{ alignSelf: "flex-start" }}
+                  >
                     {t("auth.logout")}
                   </Button>
                 </>

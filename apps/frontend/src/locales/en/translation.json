@@ -15,6 +15,10 @@
       "fleet": "Fleet",
       "reservations": "Reservations",
       "fallback": "Panel"
+    },
+    "userMenu": {
+      "openMenu": "User account menu",
+      "signedInAs": "Signed in as"
     }
   },
   "dashboard": {

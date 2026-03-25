@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { me } from "@camper-rent/api-client";
 
+import { parseAuthRedirectTo } from "../../../routes/auth";
 import { env } from "../../../utils/env";
 import { useAuthStore } from "../../../store/auth-store";
 
 export function useAuthSessionSync() {
+  const navigate = useNavigate();
   const auth = useAuthStore((state) => state.auth);
   const syncCurrentUser = useAuthStore((state) => state.syncCurrentUser);
   const clearAuth = useAuthStore((state) => state.clearAuth);
@@ -28,6 +31,13 @@ export function useAuthSessionSync() {
   useEffect(() => {
     if (currentUserQuery.isError) {
       clearAuth();
+      const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
+      const redirectTo = pathname ? parseAuthRedirectTo(pathname) : undefined;
+      navigate({
+        to: "/auth",
+        ...(redirectTo ? { search: { redirectTo } } : {}),
+        replace: true
+      });
     }
-  }, [currentUserQuery.isError, clearAuth]);
+  }, [currentUserQuery.isError, clearAuth, navigate]);
 }

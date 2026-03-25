@@ -15,6 +15,10 @@
       "fleet": "Flota",
       "reservations": "Rezerwacje",
       "fallback": "Panel"
+    },
+    "userMenu": {
+      "openMenu": "Menu konta użytkownika",
+      "signedInAs": "Zalogowany jako"
     }
   },
   "dashboard": {

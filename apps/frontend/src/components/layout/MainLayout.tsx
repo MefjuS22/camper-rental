@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   AppBar,
@@ -12,6 +13,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
   Paper,
   ToggleButton,
   ToggleButtonGroup,
@@ -21,11 +24,13 @@ import {
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import DirectionsCarFilledRoundedIcon from "@mui/icons-material/DirectionsCarFilledRounded";
 import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 
 import type { AppLanguage } from "../../i18n/config";
 import { SUPPORTED_LANGUAGES } from "../../i18n/config";
+import { parseAuthRedirectTo } from "../../routes/auth";
 import { useAuthStore } from "../../store/auth-store";
 
 const DRAWER_WIDTH = 260;
@@ -50,13 +55,40 @@ type MainLayoutProps = {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const auth = useAuthStore((state) => state.auth);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const currentBreadcrumbKey = breadcrumbKeyByPath[pathname] ?? "layout.breadcrumb.fallback";
+
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+  const userMenuOpen = Boolean(userMenuAnchor);
 
   const avatarLetter = auth?.email?.charAt(0).toUpperCase() ?? "?";
 
   const activeLang: AppLanguage = i18n.language.startsWith("pl") ? "pl" : "en";
+
+  function handleUserAvatarClick(event: React.MouseEvent<HTMLElement>) {
+    if (auth) {
+      setUserMenuAnchor(event.currentTarget);
+      return;
+    }
+    const redirectTo = parseAuthRedirectTo(pathname);
+    void navigate({
+      to: "/auth",
+      ...(redirectTo ? { search: { redirectTo } } : {})
+    });
+  }
+
+  function handleUserMenuClose() {
+    setUserMenuAnchor(null);
+  }
+
+  function handleLogout() {
+    clearAuth();
+    handleUserMenuClose();
+    void navigate({ to: "/auth", replace: true });
+  }
 
   return (
     <Box
@@ -173,18 +205,68 @@ export function MainLayout({ children }: MainLayoutProps) {
               >
                 <NotificationsRoundedIcon />
               </IconButton>
-              <Avatar
-                sx={{
-                  width: 40,
-                  height: 40,
-                  bgcolor: "transparent",
-                  color: "primary.main",
-                  border: "1px solid rgba(0, 240, 255, 0.35)",
-                  fontWeight: 700
+              <IconButton
+                onClick={handleUserAvatarClick}
+                aria-label={t("layout.userMenu.openMenu")}
+                aria-haspopup={auth ? "menu" : undefined}
+                aria-expanded={auth ? userMenuOpen : undefined}
+                sx={{ p: 0 }}
+              >
+                <Avatar
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    bgcolor: "transparent",
+                    color: "primary.main",
+                    border: "1px solid rgba(0, 240, 255, 0.35)",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    opacity: auth ? 1 : 0.65
+                  }}
+                >
+                  {avatarLetter}
+                </Avatar>
+              </IconButton>
+              <Menu
+                anchorEl={userMenuAnchor}
+                open={userMenuOpen}
+                onClose={handleUserMenuClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      mt: 1,
+                      minWidth: 220,
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
+                      bgcolor: "background.paper"
+                    }
+                  }
                 }}
               >
-                {avatarLetter}
-              </Avatar>
+                {auth && (
+                  <Box component="div">
+                    <Box sx={{ px: 2, py: 1.5, maxWidth: 280 }}>
+                      <Typography variant="caption" color="text.secondary" display="block">
+                        {t("layout.userMenu.signedInAs")}
+                      </Typography>
+                      <Typography variant="body2" fontWeight={600} noWrap title={auth.email}>
+                        {auth.email}
+                      </Typography>
+                    </Box>
+                    <Divider sx={{ borderColor: "rgba(255,255,255,0.08)" }} />
+                    <MenuItem
+                      onClick={handleLogout}
+                      sx={{ gap: 1, py: 1.25 }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 36, color: "primary.main" }}>
+                        <LogoutRoundedIcon fontSize="small" />
+                      </ListItemIcon>
+                      {t("auth.logout")}
+                    </MenuItem>
+                  </Box>
+                )}
+              </Menu>
             </Box>
           </Toolbar>
         </AppBar>
