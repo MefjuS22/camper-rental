@@ -5,7 +5,11 @@ import { AuthPage } from "../features/auth/AuthPage";
 
 export type AuthRedirectTo = Exclude<FileRouteTypes["fullPaths"], "/auth">;
 
-const AUTH_REDIRECT_PATHS = ["/", "/fleet", "/reservations"] as const satisfies readonly AuthRedirectTo[];
+const AUTH_REDIRECT_PATHS = [
+  "/",
+  "/fleet",
+  "/reservations",
+] as const satisfies readonly AuthRedirectTo[];
 
 export function parseAuthRedirectTo(raw: unknown): AuthRedirectTo | undefined {
   if (typeof raw !== "string" || raw.length === 0) return undefined;
@@ -23,5 +27,5 @@ export const Route = createFileRoute("/auth")({
     const redirectTo = parseAuthRedirectTo(search.redirectTo);
     return redirectTo ? { redirectTo } : {};
   },
-  component: AuthPage
+  component: AuthPage,
 });

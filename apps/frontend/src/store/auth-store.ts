@@ -59,7 +59,7 @@ export const useAuthStore = create<AuthState>()(
             publicId: currentUser.publicId,
             email: currentUser.email,
             roles: currentUser.roles ?? state.auth.roles,
-            permissions: currentUser.permissions ?? state.auth.permissions
+            permissions: currentUser.permissions ?? state.auth.permissions,
           };
           return { auth: nextAuth };
         });

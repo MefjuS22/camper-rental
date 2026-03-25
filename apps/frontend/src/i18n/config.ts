@@ -14,21 +14,21 @@ void i18n
   .init({
     resources: {
       en: { translation: en },
-      pl: { translation: pl }
+      pl: { translation: pl },
     },
     fallbackLng: "en",
     supportedLngs: [...SUPPORTED_LANGUAGES],
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
     react: {
-      useSuspense: false
+      useSuspense: false,
     },
     detection: {
       order: ["localStorage", "navigator"],
       caches: ["localStorage"],
-      lookupLocalStorage: "i18nextLng"
-    }
+      lookupLocalStorage: "i18nextLng",
+    },
   });
 
 export { i18n };

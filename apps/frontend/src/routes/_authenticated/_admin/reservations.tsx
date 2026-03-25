@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/_admin/reservations")({
       throw redirect({ to: "/", replace: true });
     }
   },
-  component: ReservationsPage
+  component: ReservationsPage,
 });
 
 function ReservationsPage() {
@@ -26,4 +26,3 @@ function ReservationsPage() {
     </Stack>
   );
 }
-

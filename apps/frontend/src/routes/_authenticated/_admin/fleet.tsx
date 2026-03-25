@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/_admin/fleet")({
       throw redirect({ to: "/", replace: true });
     }
   },
-  component: FleetPage
+  component: FleetPage,
 });
 
 function FleetPage() {
@@ -26,4 +26,3 @@ function FleetPage() {
     </Stack>
   );
 }
-

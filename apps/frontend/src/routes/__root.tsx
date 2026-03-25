@@ -1,4 +1,9 @@
-import { Outlet, createRootRouteWithContext, redirect, useRouterState } from "@tanstack/react-router";
+import {
+  Outlet,
+  createRootRouteWithContext,
+  redirect,
+  useRouterState,
+} from "@tanstack/react-router";
 
 import { MainLayout } from "../components/layout/MainLayout";
 import { AuthSessionSync } from "../features/auth/AuthSessionSync";
@@ -13,7 +18,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       throw redirect({ to: "/", replace: true });
     }
   },
-  component: RootLayout
+  component: RootLayout,
 });
 
 function RootLayout() {

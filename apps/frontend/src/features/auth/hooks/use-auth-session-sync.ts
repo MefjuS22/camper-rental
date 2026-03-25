@@ -18,16 +18,16 @@ export function useAuthSessionSync() {
       enabled: Boolean(auth?.token),
       refetchInterval: 30_000,
       refetchIntervalInBackground: true,
-      retry: false
+      retry: false,
     },
     client: auth?.token
       ? {
           baseURL: env.apiBaseUrl,
-          headers: { Authorization: `Bearer ${auth.token}` }
+          headers: { Authorization: `Bearer ${auth.token}` },
         }
       : {
-          baseURL: env.apiBaseUrl
-        }
+          baseURL: env.apiBaseUrl,
+        },
   });
 
   useEffect(() => {
@@ -39,12 +39,13 @@ export function useAuthSessionSync() {
   useEffect(() => {
     if (currentUserQuery.isError) {
       clearAuth();
-      const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
+      const pathname =
+        typeof window !== "undefined" ? window.location.pathname : undefined;
       const redirectTo = pathname ? parseAuthRedirectTo(pathname) : undefined;
       navigate({
         to: "/auth",
         ...(redirectTo ? { search: { redirectTo } } : {}),
-        replace: true
+        replace: true,
       });
     }
   }, [currentUserQuery.isError, clearAuth, navigate]);

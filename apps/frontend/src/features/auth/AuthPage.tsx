@@ -8,7 +8,7 @@ import {
   useLogin,
   useRegister,
   loginRequestDtoSchema,
-  registerRequestDtoSchema
+  registerRequestDtoSchema,
 } from "@camper-rent/api-client";
 import {
   Alert,
@@ -23,7 +23,7 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 
 import { env } from "../../utils/env";
@@ -51,18 +51,20 @@ export function AuthPage() {
 
   const formSchema = useMemo(() => {
     const emailValidated = z.email({ message: t("validation.emailInvalid") });
-    const passwordValidated = z.string().min(8, { message: t("validation.passwordMin") });
+    const passwordValidated = z
+      .string()
+      .min(8, { message: t("validation.passwordMin") });
 
     if (tab === "register") {
       return registerRequestDtoSchema.extend({
         email: emailValidated,
-        password: passwordValidated.max(2147483647)
+        password: passwordValidated.max(2147483647),
       });
     }
 
     return loginRequestDtoSchema.extend({
       email: emailValidated,
-      password: passwordValidated
+      password: passwordValidated,
     });
   }, [t, tab]);
 
@@ -70,8 +72,8 @@ export function AuthPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: ""
-    }
+      password: "",
+    },
   });
 
   const loginMutation = useLogin({
@@ -79,11 +81,11 @@ export function AuthPage() {
       onSuccess: (response) => {
         setAuth(response);
         goAfterAuth();
-      }
+      },
     },
     client: {
-      baseURL: env.apiBaseUrl
-    }
+      baseURL: env.apiBaseUrl,
+    },
   });
 
   const registerMutation = useRegister({
@@ -91,15 +93,16 @@ export function AuthPage() {
       onSuccess: (response) => {
         setAuth(response);
         goAfterAuth();
-      }
+      },
     },
     client: {
-      baseURL: env.apiBaseUrl
-    }
+      baseURL: env.apiBaseUrl,
+    },
   });
 
   const isLoading = loginMutation.isPending || registerMutation.isPending;
-  const errorMessage = loginMutation.error?.message ?? registerMutation.error?.message ?? null;
+  const errorMessage =
+    loginMutation.error?.message ?? registerMutation.error?.message ?? null;
 
   function onSubmit(values: FormValues) {
     if (tab === "login") {
@@ -118,7 +121,11 @@ export function AuthPage() {
 
         <Card>
           <CardContent>
-            <Tabs value={tab} onChange={(_, value: "login" | "register") => setTab(value)} sx={{ mb: 2 }}>
+            <Tabs
+              value={tab}
+              onChange={(_, value: "login" | "register") => setTab(value)}
+              sx={{ mb: 2 }}
+            >
               <Tab value="login" label={t("auth.tabLogin")} />
               <Tab value="register" label={t("auth.tabRegister")} />
             </Tabs>
@@ -162,7 +169,11 @@ export function AuthPage() {
           <CardContent>
             <Stack spacing={1.5}>
               <Typography variant="h6">{t("auth.currentUser")}</Typography>
-              {!auth && <Typography color="text.secondary">{t("auth.noSession")}</Typography>}
+              {!auth && (
+                <Typography color="text.secondary">
+                  {t("auth.noSession")}
+                </Typography>
+              )}
               {auth && (
                 <>
                   <Typography>
@@ -173,7 +184,13 @@ export function AuthPage() {
                   </Typography>
                   <Stack direction="row" spacing={1} flexWrap="wrap">
                     {(auth.roles ?? []).map((role) => (
-                      <Chip key={role} label={role} size="small" color="primary" variant="outlined" />
+                      <Chip
+                        key={role}
+                        label={role}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      />
                     ))}
                   </Stack>
                   <Button

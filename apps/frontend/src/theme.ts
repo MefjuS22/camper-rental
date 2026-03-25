@@ -4,34 +4,34 @@ export const theme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#00F0FF"
+      main: "#00F0FF",
     },
     secondary: {
-      main: "#FF453A"
+      main: "#FF453A",
     },
     background: {
       default: "#090A0F",
-      paper: "#161821"
+      paper: "#161821",
     },
     text: {
       primary: "#FFFFFF",
-      secondary: "#8B949E"
+      secondary: "#8B949E",
     },
-    divider: "rgba(255, 255, 255, 0.08)"
+    divider: "rgba(255, 255, 255, 0.08)",
   },
   shape: {
-    borderRadius: 12
+    borderRadius: 12,
   },
   typography: {
-    fontFamily: '"Inter", sans-serif'
+    fontFamily: '"Inter", sans-serif',
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#090A0F"
-        }
-      }
+          backgroundColor: "#090A0F",
+        },
+      },
     },
     MuiCard: {
       styleOverrides: {
@@ -39,9 +39,9 @@ export const theme = createTheme({
           boxShadow: "none",
           borderRadius: 16,
           border: "1px solid rgba(255, 255, 255, 0.08)",
-          backgroundImage: "none"
-        }
-      }
+          backgroundImage: "none",
+        },
+      },
     },
     MuiPaper: {
       styleOverrides: {
@@ -49,28 +49,28 @@ export const theme = createTheme({
           boxShadow: "none",
           borderRadius: 16,
           border: "1px solid rgba(255, 255, 255, 0.08)",
-          backgroundImage: "none"
-        }
-      }
+          backgroundImage: "none",
+        },
+      },
     },
     MuiButton: {
       styleOverrides: {
         root: {
           textTransform: "none",
           fontWeight: 600,
-          borderRadius: "50px"
+          borderRadius: "50px",
         },
         containedPrimary: {
           "&:hover": {
-            boxShadow: `0 0 28px ${alpha("#00F0FF", 0.45)}`
-          }
+            boxShadow: `0 0 28px ${alpha("#00F0FF", 0.45)}`,
+          },
         },
         containedSecondary: {
           "&:hover": {
-            boxShadow: `0 0 28px ${alpha("#FF453A", 0.45)}`
-          }
-        }
-      }
+            boxShadow: `0 0 28px ${alpha("#FF453A", 0.45)}`,
+          },
+        },
+      },
     },
     MuiDrawer: {
       styleOverrides: {
@@ -78,9 +78,9 @@ export const theme = createTheme({
           backgroundColor: "#0D0F17",
           borderRight: "none",
           boxShadow: "none",
-          backgroundImage: "none"
-        }
-      }
-    }
-  }
+          backgroundImage: "none",
+        },
+      },
+    },
+  },
 });

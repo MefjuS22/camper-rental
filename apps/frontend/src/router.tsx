@@ -10,8 +10,8 @@ export type RouterContext = {
 export const router = createRouter({
   routeTree,
   context: {
-    auth: undefined!
-  } satisfies RouterContext
+    auth: undefined!,
+  } satisfies RouterContext,
 });
 
 declare module "@tanstack/react-router" {

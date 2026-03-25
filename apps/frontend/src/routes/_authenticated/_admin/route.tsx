@@ -9,10 +9,9 @@ export const Route = createFileRoute("/_authenticated/_admin")({
       throw redirect({
         to: "/auth",
         ...(redirectTo ? { search: { redirectTo } } : {}),
-        replace: true
+        replace: true,
       });
     }
   },
-  component: () => <Outlet />
+  component: () => <Outlet />,
 });
-
